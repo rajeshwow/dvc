@@ -1,0 +1,309 @@
+import axios from "axios";
+import { useState } from "react";
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Row,
+  Spinner,
+} from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+
+const Register = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+    // Clear field-specific error when user types
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: "",
+      });
+    }
+  };
+
+  // Validate form
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    // Email validation
+    if (!formData.email) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email is invalid";
+    }
+
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    // Confirm password validation
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setServerError("");
+    setSuccess(false);
+
+    // Validate form
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Create user data object from form data
+      const userData = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      };
+
+      console.log("Registering user:", userData);
+
+      // Send registration request to API
+      const response = await axios.post(
+        "http://localhost:5000/api/users/register",
+        userData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Registration successful:", response.data);
+
+      // Show success message
+      setSuccess(true);
+
+      // Store token if returned from API
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        // Update auth context
+        login(response.data);
+        // Redirect after brief delay to show success message
+        setTimeout(() => {
+          navigate("/create");
+        }, 1500);
+      } else {
+        // If no token, just show success and redirect to login
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+
+      if (err.response) {
+        // Handle different error cases
+        const { data } = err.response;
+
+        if (
+          data.error &&
+          (data.error.includes("duplicate") ||
+            data.error.includes("already exists"))
+        ) {
+          setErrors({
+            ...errors,
+            email: "Email already registered",
+          });
+        } else {
+          setServerError(
+            data.error || "Registration failed. Please try again."
+          );
+        }
+      } else {
+        setServerError("Cannot connect to server. Please try again later.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Container className="my-5">
+      <Row className="justify-content-center">
+        <Col xs={12} sm={10} md={8} lg={6}>
+          <Card className="shadow border-0 rounded-lg">
+            <Card.Body className="p-5">
+              <div className="text-center mb-4">
+                <h2 className="fw-bold">Create Account</h2>
+                <p className="text-muted">
+                  Sign up to get started with your digital card
+                </p>
+              </div>
+
+              {serverError && (
+                <Alert variant="danger" className="mb-4">
+                  {serverError}
+                </Alert>
+              )}
+
+              {success && (
+                <Alert variant="success" className="mb-4">
+                  Registration successful! Redirecting...
+                </Alert>
+              )}
+
+              <Form onSubmit={handleSubmit}>
+                {/* Name Field */}
+                <Form.Group className="mb-3">
+                  <Form.Label>Full Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    placeholder="Enter your full name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    isInvalid={!!errors.name}
+                    disabled={loading}
+                    className="py-2"
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.name}
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                {/* Email Field */}
+                <Form.Group className="mb-3">
+                  <Form.Label>Email address</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    isInvalid={!!errors.email}
+                    disabled={loading}
+                    className="py-2"
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.email}
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                {/* Password Field */}
+                <Form.Group className="mb-3">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    name="password"
+                    placeholder="Create a password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    isInvalid={!!errors.password}
+                    disabled={loading}
+                    className="py-2"
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.password}
+                  </Form.Control.Feedback>
+                  <Form.Text className="text-muted">
+                    Password must be at least 6 characters long
+                  </Form.Text>
+                </Form.Group>
+
+                {/* Confirm Password Field */}
+                <Form.Group className="mb-4">
+                  <Form.Label>Confirm Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="Confirm your password"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    isInvalid={!!errors.confirmPassword}
+                    disabled={loading}
+                    className="py-2"
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.confirmPassword}
+                  </Form.Control.Feedback>
+                </Form.Group>
+
+                {/* Submit Button */}
+                <div className="d-grid">
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    size="lg"
+                    disabled={loading}
+                    className="py-2"
+                  >
+                    {loading ? (
+                      <>
+                        <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                          className="me-2"
+                        />
+                        Creating Account...
+                      </>
+                    ) : (
+                      "Create Account"
+                    )}
+                  </Button>
+                </div>
+
+                {/* Login Link */}
+                <div className="text-center mt-4">
+                  <span className="text-muted">Already have an account? </span>
+                  <Link to="/login" className="text-decoration-none">
+                    Sign In
+                  </Link>
+                </div>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
+
+export default Register;
