@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState } from "react";
 import {
   Alert,
@@ -11,6 +10,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { userAPI } from "../services/api";
 import { useAuth } from "./AuthContext";
 
 const Register = () => {
@@ -103,15 +103,17 @@ const Register = () => {
       console.log("Registering user:", userData);
 
       // Send registration request to API
-      const response = await axios.post(
-        "http://localhost:5000/api/users/register",
-        userData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      // const response = await axios.post(
+      //   "http://localhost:5000/api/users/register",
+      //   userData,
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+
+      const response = userAPI.register(userData);
 
       console.log("Registration successful:", response.data);
 
@@ -119,8 +121,8 @@ const Register = () => {
       setSuccess(true);
 
       // Store token if returned from API
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
+      if (response.token) {
+        localStorage.setItem("token", response.token);
         // Update auth context
         login(response.data);
         // Redirect after brief delay to show success message
