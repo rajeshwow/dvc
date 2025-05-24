@@ -9,10 +9,7 @@ const dbURI = isProd
   : process.env.MONGODB_URI_LOCAL;
 
 mongoose
-  .connect(dbURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(dbURI)
   .then(() => {
     console.log("MongoDB Connected");
   })
