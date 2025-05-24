@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const Users = require("../models/user.model");
 
 // JWT secret key (should be in environment variables in production)
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
+const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 const JWT_EXPIRES_IN = "24h"; // Token expiration time
 
 exports.getAllUsers = async (req, res) => {

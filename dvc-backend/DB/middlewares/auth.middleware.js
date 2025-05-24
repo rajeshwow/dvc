@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 
 // Use the same secret key as in the authentication controller
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
+const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
 // Middleware to authenticate user based on JWT token
 exports.authenticateUser = async (req, res, next) => {
