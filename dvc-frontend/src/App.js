@@ -4,7 +4,10 @@ import "./animations.css";
 import { AuthProvider } from "./Auth/AuthContext";
 import Login from "./Auth/login";
 import Register from "./Auth/register";
-import About from "./components/about";
+import {
+  default as About,
+  default as AboutComponent,
+} from "./components/about";
 import CardAnalytics from "./components/cardAnalytics";
 import CardCreate from "./components/CardCreate";
 import CardView from "./components/CardView";
@@ -23,6 +26,7 @@ function App() {
           {/* Public routes (accessible when not logged in) */}
           <Route element={<PublicRoute />}>
             <Route path="/login" element={<Login />} />
+            <Route path="/about" element={<AboutComponent />} />
             <Route path="/register" element={<Register />} />
           </Route>
 

@@ -15,7 +15,7 @@ const Navbars = () => {
     <Navbar bg="light" expand="lg" className="mb-3">
       <Container>
         <Navbar.Brand as={NavLink} to="/">
-          CardApp
+          DVC
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -26,11 +26,11 @@ const Navbars = () => {
             <Nav.Link as={NavLink} to="/create">
               Create Card
             </Nav.Link>
-            {/* <Nav.Link as={NavLink} to="/about">
-              About
-            </Nav.Link> */}
             <Nav.Link as={NavLink} to="/my-cards">
               My Cards
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/about">
+              About
             </Nav.Link>
           </Nav>
 
