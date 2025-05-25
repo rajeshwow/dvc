@@ -1,13 +1,16 @@
+import { useNavigate } from "react-router-dom";
 import "../footer.css";
+
 const ElegantFooter = () => {
   const currentYear = new Date().getFullYear();
+  const navigate = useNavigate();
 
   const quickLinks = [
-    { name: "Home", href: "#home" },
-    { name: "Features", href: "#features" },
-    { name: "Templates", href: "#templates" },
-    { name: "Pricing", href: "#pricing" },
-    { name: "About Us", href: "#about" },
+    { name: "Home", href: "/home" },
+    { name: "Create Card", href: "/create" },
+    { name: "My Cards", href: "/my-cards" },
+    // { name: "Pricing", href: "#pricing" },
+    { name: "About Us", href: "/about" },
   ];
 
   const socialLinks = [
@@ -19,18 +22,18 @@ const ElegantFooter = () => {
   ];
 
   const supportLinks = [
-    { name: "Help Center", href: "#help" },
-    { name: "Contact Us", href: "#contact" },
-    { name: "FAQ", href: "#faq" },
-    { name: "Live Chat", href: "#chat" },
-    { name: "Documentation", href: "#docs" },
+    // { name: "Help Center", href: "#help" },
+    { name: "Contact Us", href: "/contact-us" },
+    { name: "FAQ", href: "/faq" },
+    // { name: "Live Chat", href: "#chat" },
+    // { name: "Documentation", href: "#docs" },
   ];
 
   const legalLinks = [
-    { name: "Privacy Policy", href: "#privacy" },
-    { name: "Terms of Service", href: "#terms" },
-    { name: "Cookie Policy", href: "#cookies" },
-    { name: "GDPR", href: "#gdpr" },
+    { name: "Privacy Policy", href: "/privacy-policy" },
+    { name: "Terms of Service", href: "/terms-and-conditions" },
+    { name: "Cookie Policy", href: "/cookie-policy" },
+    // { name: "GDPR", href: "#gdpr" },
   ];
 
   return (
@@ -78,7 +81,13 @@ const ElegantFooter = () => {
                   <ul className="footer-links">
                     {quickLinks.map((link, index) => (
                       <li key={index}>
-                        <a href={link.href} className="footer-link">
+                        <a
+                          onClick={() => {
+                            navigate(link.href);
+                          }}
+                          className="footer-link"
+                          style={{ cursor: "pointer" }}
+                        >
                           {link.name}
                         </a>
                       </li>
@@ -94,7 +103,13 @@ const ElegantFooter = () => {
                   <ul className="footer-links">
                     {supportLinks.map((link, index) => (
                       <li key={index}>
-                        <a href={link.href} className="footer-link">
+                        <a
+                          onClick={() => {
+                            navigate(link.href);
+                          }}
+                          className="footer-link"
+                          style={{ cursor: "pointer" }}
+                        >
                           {link.name}
                         </a>
                       </li>
@@ -159,7 +174,13 @@ const ElegantFooter = () => {
               </div>
               <div className="footer-bottom-links">
                 {legalLinks.map((link, index) => (
-                  <a key={index} href={link.href}>
+                  <a
+                    key={index}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      navigate(link.href);
+                    }}
+                  >
                     {link.name}
                   </a>
                 ))}

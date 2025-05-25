@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../about.css";
-import ElegantFooter from "./footer";
 const About = () => {
+  const navigate = useNavigate();
   const [animatedSections, setAnimatedSections] = useState(new Set());
   const [counters, setCounters] = useState({
     users: 0,
@@ -397,7 +398,9 @@ const About = () => {
                   <p className="team-role">{member.role}</p>
                   <p className="team-bio">{member.bio}</p>
                   <a
-                    href={member.linkedin}
+                    onClick={() => {
+                      navigate(member.linkedin);
+                    }}
                     target="_blank"
                     className="team-social"
                     rel="noreferrer"
@@ -452,7 +455,6 @@ const About = () => {
           </div>
         </div>
       </section> */}
-      <ElegantFooter />
     </>
   );
 };

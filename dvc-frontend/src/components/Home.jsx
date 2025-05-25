@@ -2,7 +2,6 @@ import { Button, Col, Container, Image, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Auth/AuthContext"; // Import your auth context
 import FeaturesDemo from "./featuresDemo";
-import ElegantFooter from "./footer";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -73,7 +72,6 @@ const Home = () => {
         </Row>
       </Container>
       <FeaturesDemo />
-      <ElegantFooter />
     </>
   );
 };
