@@ -69,25 +69,4 @@ export const cardAPI = {
   },
 };
 
-// Authentication API calls
-export const authAPI = {
-  // Login user
-  login: async (credentials) => {
-    const response = await api.post("/api/users/login", credentials);
-    return response.data;
-  },
-
-  // Register user
-  register: async (userData) => {
-    const response = await api.post("/api/users/register", userData);
-    return response.data;
-  },
-
-  // Get current user profile
-  getCurrentUser: async () => {
-    const response = await api.get("/api/users/me");
-    return response.data;
-  },
-};
-
 export default api;

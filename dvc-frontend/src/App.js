@@ -10,6 +10,7 @@ import {
 } from "./components/about";
 import CardAnalytics from "./components/cardAnalytics";
 import CardCreate from "./components/CardCreate";
+import CardEdit from "./components/CardEdit";
 import CardView from "./components/CardView";
 import ContactUs from "./components/contactus";
 import CookiePolicy from "./components/cookiepolicy";
@@ -20,6 +21,7 @@ import MyCards from "./components/myCards";
 import PrivacyPolicy from "./components/privacypolicy";
 import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
+import ResetPassword from "./components/resetpassword";
 import ScrollToTop from "./components/scrollToTop";
 import TermsOfService from "./components/termsconditions";
 
@@ -37,6 +39,10 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route
+                path="/reset-password/:token"
+                element={<ResetPassword />}
+              />
+              <Route
                 path="/terms-and-conditions"
                 element={<TermsOfService />}
               />
@@ -48,7 +54,7 @@ function App() {
             {/* Private routes (require authentication) */}
             <Route element={<PrivateRoute />}>
               <Route path="/create" element={<CardCreate />} />
-              <Route path="/edit/:id" element={<CardCreate />} />
+              <Route path="/edit/:id" element={<CardEdit />} />
               <Route path="/my-cards" element={<MyCards />} />
               <Route path="/analytics/:id" element={<CardAnalytics />} />
             </Route>

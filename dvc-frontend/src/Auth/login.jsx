@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/default
-import { jwtDecode } from "jwt-decode"; // Add JWT decode for token validation
+import { jwtDecode } from "jwt-decode";
 import { useState } from "react";
 import {
   Alert,
@@ -8,6 +8,8 @@ import {
   Col,
   Container,
   Form,
+  InputGroup,
+  Modal,
   Row,
   Spinner,
 } from "react-bootstrap";
@@ -22,6 +24,15 @@ const Login = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  // Forgot Password Modal State
+  const [showForgotModal, setShowForgotModal] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotSuccess, setForgotSuccess] = useState(false);
+  const [forgotError, setForgotError] = useState("");
+
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -32,6 +43,61 @@ const Login = () => {
       ...formData,
       [name]: value,
     });
+  };
+
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  // Handle forgot password modal
+  const handleForgotPassword = () => {
+    setForgotEmail(formData.email); // Pre-fill with login email if available
+    setForgotError("");
+    setForgotSuccess(false);
+    setShowForgotModal(true);
+  };
+
+  // Handle forgot password form submission
+  const handleForgotSubmit = async (e) => {
+    e.preventDefault();
+    setForgotLoading(true);
+    setForgotError("");
+
+    if (!forgotEmail) {
+      setForgotError("Please enter your email address");
+      setForgotLoading(false);
+      return;
+    }
+
+    try {
+      // Call forgot password API
+      await userAPI.forgotPassword(forgotEmail);
+      setForgotSuccess(true);
+
+      // Auto close modal after 3 seconds
+      setTimeout(() => {
+        setShowForgotModal(false);
+        setForgotSuccess(false);
+        setForgotEmail("");
+      }, 3000);
+    } catch (err) {
+      console.error("Forgot password error:", err);
+      setForgotError(
+        err.response?.data?.error ||
+          "Failed to send reset email. Please try again."
+      );
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
+  // Close forgot password modal
+  const closeForgotModal = () => {
+    setShowForgotModal(false);
+    setForgotEmail("");
+    setForgotError("");
+    setForgotSuccess(false);
   };
 
   const handleSubmit = async (e) => {
@@ -93,69 +159,183 @@ const Login = () => {
       setLoading(false);
     }
   };
-  return (
-    <Container className="my-5">
-      <Row className="justify-content-center">
-        <Col xs={12} sm={10} md={8} lg={6}>
-          <Card className="shadow border-0 rounded-lg">
-            <Card.Body className="p-5">
-              <div className="text-center mb-4">
-                <h2 className="fw-bold">Welcome Back</h2>
-                <p className="text-muted">Please sign in to your account</p>
-              </div>
 
-              {error && (
-                <Alert variant="danger" className="mb-4">
-                  {error}
+  return (
+    <>
+      <Container className="my-5">
+        <Row className="justify-content-center">
+          <Col xs={12} sm={10} md={8} lg={6}>
+            <Card className="shadow border-0 rounded-lg">
+              <Card.Body className="p-5">
+                <div className="text-center mb-4">
+                  <h2 className="fw-bold">Welcome Back</h2>
+                  <p className="text-muted">Please sign in to your account</p>
+                </div>
+
+                {error && (
+                  <Alert variant="danger" className="mb-4">
+                    {error}
+                  </Alert>
+                )}
+
+                <Form onSubmit={handleSubmit}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Email address</Form.Label>
+                    <Form.Control
+                      type="email"
+                      name="email"
+                      placeholder="Enter your email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      disabled={loading}
+                      className="py-2"
+                    />
+                  </Form.Group>
+
+                  <Form.Group className="mb-4">
+                    <div className="d-flex justify-content-between">
+                      <Form.Label>Password</Form.Label>
+                      <Button
+                        variant="link"
+                        className="p-0 text-decoration-none small"
+                        onClick={handleForgotPassword}
+                        disabled={loading}
+                      >
+                        Forgot password?
+                      </Button>
+                    </div>
+                    <InputGroup>
+                      <Form.Control
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        placeholder="Enter your password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                        disabled={loading}
+                        className="py-2"
+                      />
+                      <Button
+                        variant="outline-secondary"
+                        onClick={togglePasswordVisibility}
+                        disabled={loading}
+                        className="border-start-0"
+                        style={{ borderColor: "#ced4da" }}
+                      >
+                        <i
+                          className={`bi ${
+                            showPassword ? "bi-eye-slash" : "bi-eye"
+                          }`}
+                        ></i>
+                      </Button>
+                    </InputGroup>
+                  </Form.Group>
+
+                  <div className="d-grid">
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      size="lg"
+                      disabled={loading}
+                      className="py-2"
+                    >
+                      {loading ? (
+                        <>
+                          <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                            className="me-2"
+                          />
+                          Signing in...
+                        </>
+                      ) : (
+                        "Sign In"
+                      )}
+                    </Button>
+                  </div>
+
+                  <div className="text-center mt-4">
+                    <span className="text-muted">Don't have an account? </span>
+                    <Link to="/register" className="text-decoration-none">
+                      Sign Up
+                    </Link>
+                  </div>
+                </Form>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+
+      {/* Forgot Password Modal */}
+      <Modal show={showForgotModal} onHide={closeForgotModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Reset Password</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {forgotSuccess ? (
+            <div className="text-center py-3">
+              <div className="text-success mb-3">
+                <i
+                  className="bi bi-check-circle-fill"
+                  style={{ fontSize: "3rem" }}
+                ></i>
+              </div>
+              <h5 className="text-success">Email Sent!</h5>
+              <p className="text-muted">
+                We've sent a password reset link to{" "}
+                <strong>{forgotEmail}</strong>
+              </p>
+              <p className="small text-muted">
+                Please check your inbox and follow the instructions to reset
+                your password. This modal will close automatically.
+              </p>
+            </div>
+          ) : (
+            <>
+              <p className="text-muted mb-3">
+                Enter your email address and we'll send you a link to reset your
+                password.
+              </p>
+
+              {forgotError && (
+                <Alert variant="danger" className="mb-3">
+                  {forgotError}
                 </Alert>
               )}
 
-              <Form onSubmit={handleSubmit}>
+              <Form onSubmit={handleForgotSubmit}>
                 <Form.Group className="mb-3">
                   <Form.Label>Email address</Form.Label>
                   <Form.Control
                     type="email"
-                    name="email"
                     placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={handleChange}
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
                     required
-                    disabled={loading}
-                    className="py-2"
+                    disabled={forgotLoading}
+                    autoFocus
                   />
                 </Form.Group>
 
-                <Form.Group className="mb-4">
-                  <div className="d-flex justify-content-between">
-                    <Form.Label>Password</Form.Label>
-                    <Link
-                      to="/forgot-password"
-                      className="small text-decoration-none"
-                    >
-                      Forgot password?
-                    </Link>
-                  </div>
-                  <Form.Control
-                    type="password"
-                    name="password"
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                    disabled={loading}
-                    className="py-2"
-                  />
-                </Form.Group>
-
-                <div className="d-grid">
+                <div className="d-flex gap-2 justify-content-end">
+                  <Button
+                    variant="secondary"
+                    onClick={closeForgotModal}
+                    disabled={forgotLoading}
+                  >
+                    Cancel
+                  </Button>
                   <Button
                     variant="primary"
                     type="submit"
-                    size="lg"
-                    disabled={loading}
-                    className="py-2"
+                    disabled={forgotLoading}
                   >
-                    {loading ? (
+                    {forgotLoading ? (
                       <>
                         <Spinner
                           as="span"
@@ -165,26 +345,19 @@ const Login = () => {
                           aria-hidden="true"
                           className="me-2"
                         />
-                        Signing in...
+                        Sending...
                       </>
                     ) : (
-                      "Sign In"
+                      "Send Reset Link"
                     )}
                   </Button>
                 </div>
-
-                <div className="text-center mt-4">
-                  <span className="text-muted">Don't have an account? </span>
-                  <Link to="/register" className="text-decoration-none">
-                    Sign Up
-                  </Link>
-                </div>
               </Form>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+            </>
+          )}
+        </Modal.Body>
+      </Modal>
+    </>
   );
 };
 

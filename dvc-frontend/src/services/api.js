@@ -193,7 +193,7 @@ export const userAPI = {
   },
 
   // Reset password request
-  requestPasswordReset: async (email) => {
+  forgotPassword: async (email) => {
     const response = await api.post("/api/users/forgot-password", { email });
     return response.data;
   },
@@ -201,6 +201,11 @@ export const userAPI = {
   // Reset password with token
   resetPassword: async (resetData) => {
     const response = await api.post("/api/users/reset-password", resetData);
+    return response.data;
+  },
+
+  validateResetToken: async (token) => {
+    const response = await api.get(`/api/users/validate-reset-token/${token}`);
     return response.data;
   },
 
