@@ -45,7 +45,7 @@ const uploadProductImage = multer({
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB limit
   },
-}).single("productImage");
+}).single("images");
 
 // Use the correct field name that matches your frontend
 const uploadMultipleProductImages = multer({
@@ -54,7 +54,7 @@ const uploadMultipleProductImages = multer({
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB limit
   },
-}).array("productImages", 5); // Match this field name with what you're using in the frontend
+}).array("images", 5); // Match this field name with what you're using in the frontend
 
 // Middleware wrapper for better error handling
 const handleUpload = (uploadFn) => {

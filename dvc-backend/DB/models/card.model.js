@@ -99,7 +99,7 @@ const cardSchema = new mongoose.Schema({
   products: [
     {
       name: { type: String, required: true },
-      images: [{}], // URLs to product images
+      images: [String], // URLs to product images
       price: { type: String }, // Using string to allow ranges like "$10-$20"
       description: { type: String },
       category: { type: String },

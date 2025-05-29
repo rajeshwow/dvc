@@ -10,7 +10,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { cardAPI } from "../services/api";
+import { analyticsAPI, cardAPI } from "../services/api";
 
 const MyCards = () => {
   const [cards, setCards] = useState([]);
@@ -34,6 +34,26 @@ const MyCards = () => {
 
     fetchUserCards();
   }, []);
+
+  // Handle share
+  const handleShare = (thisCardId, thisCardName) => {
+    // Track share interaction
+    analyticsAPI.trackShare(thisCardId, "share_button");
+
+    if (navigator.share) {
+      navigator
+        .share({
+          title: `${thisCardName}'s Digital Card`,
+          text: `Check out ${thisCardName}'s digital business card`,
+          url: window.location.href,
+        })
+        .then(() => console.log("Shared successfully"))
+        .catch((error) => console.log("Error sharing:", error));
+    } else {
+      // Fallback for browsers that don't support the Web Share API
+      // setShowQRModal(true);
+    }
+  };
 
   console.log("gggggggggggggggggggggggggg", cards);
 
@@ -195,6 +215,7 @@ const MyCards = () => {
                       </Button>
 
                       <Button
+                        className="rounded-circle"
                         variant="outline-danger"
                         size="sm"
                         onClick={() => handleDeleteCard(card._id)}
@@ -210,6 +231,16 @@ const MyCards = () => {
                         className="rounded-circle"
                       >
                         <i className="bi bi-bar-chart "></i>
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline-info"
+                        onClick={() => {
+                          handleShare(card._id, card.name);
+                        }}
+                        className="rounded-circle"
+                      >
+                        <i className="bi bi-share "></i>
                       </Button>
                     </div>
                   </Card.Footer>

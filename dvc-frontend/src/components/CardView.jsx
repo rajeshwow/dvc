@@ -34,6 +34,44 @@ const CardView = () => {
   const [showProductEditor, setShowProductEditor] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
 
+  // Delete confirmation modal state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+
+  // Handle delete product confirmation
+  const handleDeleteProduct = (product) => {
+    setProductToDelete(product);
+    setShowDeleteModal(true);
+  };
+
+  // Confirm delete product
+  const confirmDeleteProduct = async () => {
+    if (!productToDelete) return;
+
+    try {
+      await cardAPI.deleteCardProduct(id, productToDelete._id);
+
+      // Refresh card data
+      const updatedCard = await cardAPI.getCard(id);
+      setCard(updatedCard);
+
+      // Close modal and reset state
+      setShowDeleteModal(false);
+      setProductToDelete(null);
+
+      console.log("Product deleted successfully");
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      alert("Error deleting product. Please try again.");
+    }
+  };
+
+  // Cancel delete
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setProductToDelete(null);
+  };
+
   // Handle adding a new product
   const handleAddProduct = () => {
     setCurrentProduct(null); // No product to edit
@@ -67,6 +105,7 @@ const CardView = () => {
       // Refresh card data
       const updatedCard = await cardAPI.getCard(id);
       setCard(updatedCard);
+      setShowProductEditor(false);
     } catch (error) {
       console.error("Error saving product:", error);
     }
@@ -497,6 +536,7 @@ END:VCARD`;
             isOwner={isOwner}
             onAddProduct={handleAddProduct}
             onEditProduct={handleEditProduct}
+            onDeleteProduct={handleDeleteProduct}
           />
 
           {/* Business Hours Section */}
@@ -522,6 +562,52 @@ END:VCARD`;
             product={currentProduct}
             onSave={handleSaveProduct}
           />
+
+          {/* Delete Confirmation Modal */}
+          <Modal show={showDeleteModal} onHide={cancelDelete} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>Delete Product</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>Are you sure you want to delete this product?</p>
+              {productToDelete && (
+                <div className="d-flex align-items-center gap-3 p-3 border rounded">
+                  {productToDelete.images &&
+                    productToDelete.images.length > 0 && (
+                      <img
+                        src={productToDelete.images[0]}
+                        alt={productToDelete.name}
+                        style={{
+                          width: "60px",
+                          height: "60px",
+                          objectFit: "cover",
+                          borderRadius: "8px",
+                        }}
+                      />
+                    )}
+                  <div>
+                    <h6 className="mb-1">{productToDelete.name}</h6>
+                    {productToDelete.price && (
+                      <small className="text-muted">
+                        {productToDelete.price}
+                      </small>
+                    )}
+                  </div>
+                </div>
+              )}
+              <p className="text-danger mt-3 mb-0">
+                <small>This action cannot be undone.</small>
+              </p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={cancelDelete}>
+                Cancel
+              </Button>
+              <Button variant="danger" onClick={confirmDeleteProduct}>
+                Delete Product
+              </Button>
+            </Modal.Footer>
+          </Modal>
 
           {/* Action buttons */}
           <div className="d-grid gap-2">

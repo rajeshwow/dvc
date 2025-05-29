@@ -4,7 +4,13 @@ import { useState } from "react";
 import { Badge, Button, Modal } from "react-bootstrap";
 // import './ProductGallery.css';
 
-const ProductGallery = ({ products, isOwner, onAddProduct, onEditProduct }) => {
+const ProductGallery = ({
+  products,
+  isOwner,
+  onAddProduct,
+  onEditProduct,
+  onDeleteProduct,
+}) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
 
@@ -12,15 +18,23 @@ const ProductGallery = ({ products, isOwner, onAddProduct, onEditProduct }) => {
     setSelectedProduct(product);
     setShowDetailModal(true);
   };
+  console.log("showDetailModal", showDetailModal);
 
   const handleCloseDetail = () => {
     setShowDetailModal(false);
     setSelectedProduct(null);
   };
 
-  const handleEditProduct = () => {
-    onEditProduct(selectedProduct);
-    handleCloseDetail();
+  // Handle edit button click with event prevention
+  const handleEditClick = (e, product) => {
+    e.stopPropagation(); // Prevent bubbling to parent div
+    onEditProduct(product);
+  };
+
+  // Handle delete button click with event prevention
+  const handleDeleteClick = (e, product) => {
+    e.stopPropagation(); // Prevent bubbling to parent div
+    onDeleteProduct(product);
   };
 
   console.log("products", products);
@@ -60,6 +74,55 @@ const ProductGallery = ({ products, isOwner, onAddProduct, onEditProduct }) => {
                     <Badge bg="warning" className="featured-badge">
                       Featured
                     </Badge>
+                  )}
+                  {isOwner && (
+                    <div className="position-absolute top-0 end-0 m-2">
+                      <div className="d-flex gap-1">
+                        {/* Edit Button */}
+                        <Button
+                          variant="light"
+                          size="sm"
+                          className="rounded-circle"
+                          style={{
+                            width: "32px",
+                            height: "32px",
+                            padding: "0",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                          onClick={(e) => handleEditClick(e, product)}
+                          title="Edit product"
+                        >
+                          <i
+                            className="bi bi-pencil"
+                            style={{ fontSize: "14px" }}
+                          ></i>
+                        </Button>
+
+                        {/* Delete Button */}
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          className="rounded-circle"
+                          style={{
+                            width: "32px",
+                            height: "32px",
+                            padding: "0",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                          onClick={(e) => handleDeleteClick(e, product)}
+                          title="Delete product"
+                        >
+                          <i
+                            className="bi bi-x"
+                            style={{ fontSize: "16px", fontWeight: "bold" }}
+                          ></i>
+                        </Button>
+                      </div>
+                    </div>
                   )}
                 </div>
                 <div className="product-info p-2">
@@ -186,7 +249,7 @@ const ProductGallery = ({ products, isOwner, onAddProduct, onEditProduct }) => {
         </Modal.Body>
         <Modal.Footer>
           {isOwner && (
-            <Button variant="outline-secondary" onClick={handleEditProduct}>
+            <Button variant="outline-secondary" onClick={handleEditClick}>
               <i className="bi bi-pencil me-1"></i>
               Edit Product
             </Button>

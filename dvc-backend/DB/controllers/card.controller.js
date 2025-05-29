@@ -127,6 +127,7 @@ exports.getCardProducts = async (req, res) => {
 
 // Add a product to a card
 // controllers/card.controller.js
+// Add a product to a card
 exports.addCardProduct = async (req, res) => {
   try {
     const { cardId } = req.params;
@@ -134,7 +135,7 @@ exports.addCardProduct = async (req, res) => {
     // Check if the card exists and belongs to the user
     const card = await Card.findOne({
       _id: cardId,
-      userId: req.user.id,
+      userId: req.user._id, // Changed from req.user.id to req.user._id for consistency
     });
 
     if (!card) {
@@ -144,34 +145,53 @@ exports.addCardProduct = async (req, res) => {
     }
 
     // Debug - log the incoming data
-    console.log("Request body:", req?.body);
+    console.log("Request body:", req.body);
     console.log("Request files:", req.files);
+    console.log(
+      "Product name received:",
+      req.body.name,
+      "Type:",
+      typeof req.body.name
+    );
+
+    // Validate required fields early
+    if (!req.body.name || req.body.name.trim() === "") {
+      return res.status(400).json({ error: "Product name is required" });
+    }
 
     // Process the uploaded files
     let imageUrls = [];
 
     if (req.files && req.files.length > 0) {
-      // If using multer's array method
-      req?.files?.forEach((file) => {
+      req.files.forEach((file) => {
         const host = req.get("host");
-        const protocol = req.protocol; // 'http' or 'https'
-
-        // Create the full URL path to the image
-        // This will be something like: http://localhost:5000/uploads/products/filename.jpg
+        const protocol = req.protocol;
         const imageUrl = `${protocol}://${host}/uploads/products/${file.filename}`;
-
         imageUrls.push(imageUrl);
       });
     }
 
-    // Parse existing images if any
+    // Parse existing images if any - check for both possible field names
     let existingImages = [];
-    if (req?.body?.productImages) {
+    const imageField = req.body.image || req.body.productImages;
+
+    if (imageField) {
       try {
-        existingImages = JSON.parse(req?.body?.productImages);
+        // Handle both string and array cases
+        if (typeof imageField === "string") {
+          existingImages = JSON.parse(imageField);
+        } else if (Array.isArray(imageField)) {
+          existingImages = imageField;
+        }
       } catch (e) {
-        console.error("Error parsing existingImages:", e);
+        console.error("Error parsing existing images:", e);
+        // Continue without existing images rather than failing
       }
+    }
+
+    // Ensure existingImages is an array
+    if (!Array.isArray(existingImages)) {
+      existingImages = [];
     }
 
     // Combine existing and new image URLs
@@ -179,31 +199,32 @@ exports.addCardProduct = async (req, res) => {
 
     // Create the new product object with all required fields
     const newProduct = {
-      name: req?.body.name, // Make sure this is present and not empty
+      name: req.body.name.trim(),
       images: imageUrls,
-      price: req?.body?.price || "",
-      description: req?.body?.description || "",
-      category: req?.body?.category || "",
-      featured: req?.body?.featured === "true" || req?.body?.featured === true,
-      ctaType: req?.body?.ctaType || "inquiry",
-      ctaLink: req?.body?.ctaLink || "",
+      price: req.body.price || "",
+      description: req.body.description || "",
+      category: req.body.category || "",
+      featured: req.body.featured === "true" || req.body.featured === true,
+      ctaType: req.body.ctaType || "inquiry",
+      ctaLink: req.body.ctaLink || "",
     };
-
-    // Validate required fields before saving
-    if (!newProduct.name || newProduct.name.trim() === "") {
-      return res.status(400).json({ error: "Product name is required" });
-    }
 
     // Add the product to the card
     card.products.push(newProduct);
     await card.save();
 
-    return res.status(201).json(newProduct);
+    // Get the newly added product (it will have an _id now)
+    const addedProduct = card.products[card.products.length - 1];
+
+    return res.status(201).json({
+      message: "Product added successfully",
+      product: addedProduct,
+    });
   } catch (error) {
     console.error("Error adding product:", error);
-    return res
-      .status(500)
-      .json({ error: error.message || "Server error while adding product" });
+    return res.status(500).json({
+      error: error.message || "Server error while adding product",
+    });
   }
 };
 
