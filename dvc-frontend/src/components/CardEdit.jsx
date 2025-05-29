@@ -24,6 +24,98 @@ const CardEdit = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // Get card ID from URL
 
+  const [validationErrors, setValidationErrors] = useState({});
+
+  // Add this validation function
+  const validatePersonalInfo = () => {
+    const errors = {};
+
+    // Full Name validation
+    if (!cardData.name || cardData.name.trim() === "") {
+      errors.name = "Full name is required";
+    } else if (cardData.name.trim().length < 2) {
+      errors.name = "Full name must be at least 2 characters";
+    } else if (cardData.name.trim().length > 50) {
+      errors.name = "Full name must be less than 50 characters";
+    }
+
+    // Job Title validation
+    if (cardData.title && cardData.title.length > 50) {
+      errors.title = "Job title must be less than 50 characters";
+    }
+
+    // Company validation
+    if (cardData.company && cardData.company.length > 100) {
+      errors.company = "Company name must be less than 100 characters";
+    }
+
+    // Email validation
+    if (cardData.email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(cardData.email)) {
+        errors.email = "Please enter a valid email address";
+      } else if (cardData.email.length > 100) {
+        errors.email = "Email must be less than 100 characters";
+      }
+    }
+
+    // Phone validation
+    if (cardData.phone) {
+      const phoneRegex = /^[+]?[\d\s\-()]{9,13}$/;
+      if (!phoneRegex.test(cardData.phone)) {
+        errors.phone = "Please enter a valid phone number";
+      } else if (cardData.phone.length < 9) {
+        errors.phone = "Phone number must be at least 9 characters";
+      } else if (cardData.phone.length > 13) {
+        errors.phone = "Phone number must be less than 13 characters";
+      }
+    }
+
+    // Website validation
+    if (cardData.website) {
+      const urlRegex = /^https?:\/\/.+\..+/;
+      if (!urlRegex.test(cardData.website)) {
+        errors.website =
+          "Please enter a valid website URL (http:// or https://)";
+      } else if (cardData.website.length > 200) {
+        errors.website = "Website URL must be less than 200 characters";
+      }
+    }
+
+    // Address validation
+    if (cardData.address && cardData.address.length > 200) {
+      errors.address = "Address must be less than 200 characters";
+    }
+
+    // Bio validation
+    if (cardData.bio && cardData.bio.length > 100) {
+      errors.bio = "Bio must be less than 100 characters";
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Add this function to handle phone input
+  const handlePhoneChange = (e) => {
+    const { name, value } = e.target;
+    // Only allow digits, spaces, dashes, parentheses, and plus sign
+    const phoneValue = value.replace(/[^+\d\s\-()]/g, "");
+
+    setCardData((prev) => ({
+      ...prev,
+      [name]: phoneValue,
+    }));
+
+    // Clear validation error when user starts typing
+    if (validationErrors[name]) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
   // Card data state
   const [cardData, setCardData] = useState({
     name: "",
@@ -398,7 +490,7 @@ const CardEdit = () => {
         <Col lg={12} className="mb-4">
           <div className="d-flex justify-content-between align-items-center">
             <div>
-              <h2 className="fw-bold">Edit Your Digital Card</h2>
+              <h2 className="fw-bold">Edit Your Card</h2>
               <p className="text-muted">
                 Update your information and customize your card's appearance.
               </p>
@@ -437,7 +529,9 @@ const CardEdit = () => {
                     <Row>
                       <Col md={6}>
                         <Form.Group className="mb-3">
-                          <Form.Label>Full Name</Form.Label>
+                          <Form.Label>
+                            Full Name <span className="text-danger">*</span>
+                          </Form.Label>
                           <Form.Control
                             type="text"
                             name="name"
@@ -445,7 +539,11 @@ const CardEdit = () => {
                             onChange={handleChange}
                             required={true}
                             placeholder="Enter your full name"
+                            isInvalid={!!validationErrors.name}
                           />
+                          <Form.Control.Feedback type="invalid">
+                            {validationErrors.name}
+                          </Form.Control.Feedback>
                         </Form.Group>
                       </Col>
                       <Col md={6}>
@@ -483,7 +581,11 @@ const CardEdit = () => {
                             value={cardData.email}
                             onChange={handleChange}
                             placeholder="Enter your email"
+                            isInvalid={!!validationErrors.email}
                           />
+                          <Form.Control.Feedback type="invalid">
+                            {validationErrors.email}
+                          </Form.Control.Feedback>
                         </Form.Group>
                       </Col>
                       <Col md={6}>
@@ -493,9 +595,13 @@ const CardEdit = () => {
                             type="tel"
                             name="phone"
                             value={cardData.phone}
-                            onChange={handleChange}
+                            onChange={handlePhoneChange}
                             placeholder="Enter your phone number"
+                            isInvalid={!!validationErrors.phone}
                           />
+                          <Form.Control.Feedback type="invalid">
+                            {validationErrors.phone}
+                          </Form.Control.Feedback>
                         </Form.Group>
                       </Col>
                     </Row>
@@ -508,7 +614,11 @@ const CardEdit = () => {
                         value={cardData.website}
                         onChange={handleChange}
                         placeholder="Enter your website URL"
+                        isInvalid={!!validationErrors.website}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        {validationErrors.website}
+                      </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3">
@@ -531,7 +641,16 @@ const CardEdit = () => {
                         value={cardData.bio}
                         onChange={handleChange}
                         placeholder="Brief description about yourself"
+                        isInvalid={!!validationErrors.bio}
                       />
+                      <Form.Control.Feedback type="invalid">
+                        {validationErrors.bio}
+                      </Form.Control.Feedback>
+                      <Form.Text className="text-muted">
+                        {cardData.bio
+                          ? `${cardData.bio.length}/100 characters`
+                          : "0/100 characters"}
+                      </Form.Text>
                     </Form.Group>
                   </Form>
                 </Tab>
@@ -786,8 +905,15 @@ const CardEdit = () => {
                   <Button
                     variant="primary"
                     onClick={() => {
-                      if (activeTab === "personal") setActiveTab("social");
-                      else if (activeTab === "social") setActiveTab("design");
+                      // if (activeTab === "personal") setActiveTab("social");
+                      // else if (activeTab === "social") setActiveTab("design");
+                      if (activeTab === "personal") {
+                        if (validatePersonalInfo()) {
+                          setActiveTab("social");
+                        }
+                      } else if (activeTab === "social") {
+                        setActiveTab("design");
+                      }
                     }}
                   >
                     Next

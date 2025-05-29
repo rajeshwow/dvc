@@ -203,7 +203,7 @@ const CardView = () => {
   // Handle share
   const handleShare = () => {
     // Track share interaction
-    analyticsAPI.trackShare(id, "share_button");
+    analyticsAPI.trackShare(id, "share");
 
     if (navigator.share) {
       navigator
@@ -328,7 +328,7 @@ END:VCARD`;
   };
 
   return (
-    <Container className="py-5">
+    <Container className="py-0 py-md-3 py-lg-5">
       <Row className="justify-content-center">
         <Col md={8} lg={6}>
           <Card

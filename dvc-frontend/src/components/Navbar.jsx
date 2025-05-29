@@ -29,6 +29,9 @@ const Navbars = () => {
             <Nav.Link as={NavLink} to="/my-cards">
               My Cards
             </Nav.Link>
+            <Nav.Link as={NavLink} to="/analytics">
+              Analytics
+            </Nav.Link>
             <Nav.Link as={NavLink} to="/about">
               About
             </Nav.Link>

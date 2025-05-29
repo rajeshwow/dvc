@@ -88,6 +88,7 @@ exports.trackInteraction = async (req, res) => {
 
     // Validate interaction type
     const validInteractions = [
+      "view",
       "contact_click",
       "social_click",
       "download",
@@ -125,6 +126,7 @@ exports.trackInteraction = async (req, res) => {
 
 // Get analytics for a specific card (requires authentication)
 // Updated getCardAnalytics function
+
 exports.getCardAnalytics = async (req, res) => {
   try {
     const { cardId } = req.params;
@@ -233,6 +235,21 @@ exports.getCardAnalytics = async (req, res) => {
       },
     ]);
 
+    // Get recent activity for this card
+    const recentActivity = await CardAnalytic.find({
+      cardId: cardObjectId,
+      timestamp: { $gte: startDate, $lte: endDate },
+    })
+      .sort({ timestamp: -1 })
+      .limit(20);
+
+    const formattedActivity = recentActivity.map((activity) => ({
+      cardName: card.name,
+      type: activity.interactionType,
+      timestamp: activity.timestamp,
+      location: "Unknown",
+    }));
+
     // Get daily view counts
     const dailyViews = await CardAnalytic.aggregate([
       {
@@ -263,9 +280,41 @@ exports.getCardAnalytics = async (req, res) => {
       views: item.count,
     }));
 
-    // Return analytics data
+    // Return data in consistent format
     res.json({
-      timeframe: timeframe || "30",
+      totalViews: viewCount,
+      totalShares: shares,
+      totalDownloads: downloads,
+      totalContacts: contactClicks,
+      recentActivity: formattedActivity,
+      cardStats: [
+        {
+          cardId: cardId,
+          cardName: card.name,
+          views: viewCount,
+          shares: shares,
+          downloads: downloads,
+          contacts: contactClicks,
+          engagementRate:
+            viewCount > 0
+              ? Math.round(
+                  ((contactClicks + shares + downloads) / viewCount) * 100
+                )
+              : 0,
+        },
+      ],
+      topPerformingCards: [
+        {
+          cardId: cardId,
+          cardName: card.name,
+          views: viewCount,
+          shares: shares,
+          downloads: downloads,
+          contacts: contactClicks,
+          totalEngagements: viewCount + shares + downloads + contactClicks,
+        },
+      ],
+      // Keep original format for backward compatibility
       summary: {
         totalViews: viewCount,
         uniqueVisitors: uniqueVisitors.length,
@@ -283,5 +332,239 @@ exports.getCardAnalytics = async (req, res) => {
   } catch (error) {
     console.error("Analytics error:", error);
     res.status(500).json({ error: "Failed to retrieve analytics" });
+  }
+};
+
+// Get analytics for all user's cards
+exports.getAllCardsAnalytics = async (req, res) => {
+  try {
+    const { days = "7" } = req.query;
+    const userId = req.user._id;
+
+    // Get user's cards
+    const userCards = await Card.find({ userId });
+    if (userCards.length === 0) {
+      return res.json({
+        totalViews: 0,
+        totalShares: 0,
+        totalDownloads: 0,
+        totalContacts: 0,
+        recentActivity: [],
+        cardStats: [],
+        topPerformingCards: [],
+      });
+    }
+
+    const cardIds = userCards.map((card) => card._id);
+    const dateFrom = new Date();
+    dateFrom.setDate(dateFrom.getDate() - parseInt(days));
+
+    console.log("Card IDs:", cardIds);
+    console.log("Date from:", dateFrom);
+
+    // Get total counts for each interaction type
+    const totalViews = await CardAnalytic.countDocuments({
+      cardId: { $in: cardIds },
+      interactionType: "view",
+      timestamp: { $gte: dateFrom },
+    });
+
+    const totalShares = await CardAnalytic.countDocuments({
+      cardId: { $in: cardIds },
+      interactionType: "share",
+      timestamp: { $gte: dateFrom },
+    });
+
+    const totalDownloads = await CardAnalytic.countDocuments({
+      cardId: { $in: cardIds },
+      interactionType: "download",
+      timestamp: { $gte: dateFrom },
+    });
+
+    const totalContacts = await CardAnalytic.countDocuments({
+      cardId: { $in: cardIds },
+      interactionType: "contact_click",
+      timestamp: { $gte: dateFrom },
+    });
+
+    // Get card-wise statistics
+    const cardStats = [];
+    for (const card of userCards) {
+      const views = await CardAnalytic.countDocuments({
+        cardId: card._id,
+        interactionType: "view",
+        timestamp: { $gte: dateFrom },
+      });
+
+      const shares = await CardAnalytic.countDocuments({
+        cardId: card._id,
+        interactionType: "share",
+        timestamp: { $gte: dateFrom },
+      });
+
+      const downloads = await CardAnalytic.countDocuments({
+        cardId: card._id,
+        interactionType: "download",
+        timestamp: { $gte: dateFrom },
+      });
+
+      const contacts = await CardAnalytic.countDocuments({
+        cardId: card._id,
+        interactionType: "contact_click",
+        timestamp: { $gte: dateFrom },
+      });
+
+      const totalInteractions = shares + downloads + contacts;
+      const engagementRate =
+        views > 0 ? Math.round((totalInteractions / views) * 100) : 0;
+
+      cardStats.push({
+        cardId: card._id.toString(),
+        cardName: card.name,
+        views,
+        shares,
+        downloads,
+        contacts,
+        engagementRate,
+      });
+    }
+
+    // Get recent activity
+    const recentActivity = await CardAnalytic.find({
+      cardId: { $in: cardIds },
+      timestamp: { $gte: dateFrom },
+    })
+      .sort({ timestamp: -1 })
+      .limit(20)
+      .populate("cardId", "name");
+
+    const formattedActivity = recentActivity.map((activity) => ({
+      cardName: activity.cardId?.name || "Unknown Card",
+      type: activity.interactionType,
+      timestamp: activity.timestamp,
+      location: "Unknown", // Add location logic if needed
+    }));
+
+    // Top performing cards
+    const topPerformingCards = [...cardStats]
+      .sort(
+        (a, b) =>
+          b.views +
+          b.shares +
+          b.downloads +
+          b.contacts -
+          (a.views + a.shares + a.downloads + a.contacts)
+      )
+      .slice(0, 5)
+      .map((card) => ({
+        ...card,
+        totalEngagements:
+          card.views + card.shares + card.downloads + card.contacts,
+      }));
+
+    const result = {
+      totalViews,
+      totalShares,
+      totalDownloads,
+      totalContacts,
+      recentActivity: formattedActivity,
+      cardStats,
+      topPerformingCards,
+    };
+
+    console.log("Analytics result:", result);
+    res.json(result);
+  } catch (error) {
+    console.error("Error fetching all cards analytics:", error);
+    res.status(500).json({ error: "Failed to fetch analytics" });
+  }
+};
+
+// Get analytics summary
+exports.getAnalyticsSummary = async (req, res) => {
+  try {
+    const { days = "7" } = req.query;
+    const userId = req.user._id;
+
+    // Get user's cards
+    const userCards = await Card.find({ userId });
+    const cardIds = userCards.map((card) => card._id.toString());
+
+    const dateFrom = new Date();
+    dateFrom.setDate(dateFrom.getDate() - parseInt(days));
+
+    // Get total counts
+    const totalCounts = await Analytics.aggregate([
+      {
+        $match: {
+          cardId: { $in: cardIds },
+          timestamp: { $gte: dateFrom },
+        },
+      },
+      {
+        $group: {
+          _id: "$eventType",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const summary = {
+      totalViews: 0,
+      totalShares: 0,
+      totalDownloads: 0,
+      totalContacts: 0,
+      totalCards: userCards.length,
+    };
+
+    totalCounts.forEach((item) => {
+      switch (item._id) {
+        case "view":
+          summary.totalViews = item.count;
+          break;
+        case "share":
+          summary.totalShares = item.count;
+          break;
+        case "download":
+          summary.totalDownloads = item.count;
+          break;
+        case "contact":
+          summary.totalContacts = item.count;
+          break;
+      }
+    });
+
+    res.json(summary);
+  } catch (error) {
+    console.error("Error fetching analytics summary:", error);
+    res.status(500).json({ error: "Failed to fetch summary" });
+  }
+};
+
+// Get top performing cards
+exports.getTopPerformingCards = async (req, res) => {
+  try {
+    const { limit = "5", days = "30" } = req.query;
+    // Implementation similar to the one in getAllCardsAnalytics
+    // ... (implement based on your needs)
+
+    res.json({ message: "Top performing cards endpoint" });
+  } catch (error) {
+    console.error("Error fetching top performing cards:", error);
+    res.status(500).json({ error: "Failed to fetch top performing cards" });
+  }
+};
+
+// Get recent activity
+exports.getRecentActivity = async (req, res) => {
+  try {
+    const { limit = "20", days = "7" } = req.query;
+    // Implementation similar to the one in getAllCardsAnalytics
+    // ... (implement based on your needs)
+
+    res.json({ message: "Recent activity endpoint" });
+  } catch (error) {
+    console.error("Error fetching recent activity:", error);
+    res.status(500).json({ error: "Failed to fetch recent activity" });
   }
 };

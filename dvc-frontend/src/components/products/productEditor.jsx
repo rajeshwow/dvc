@@ -207,9 +207,7 @@ const ProductEditor = ({ show, onHide, product, onSave }) => {
   return (
     <Modal show={show} onHide={handleClose} centered size="lg">
       <Modal.Header closeButton>
-        <Modal.Title>
-          {product ? "Edit Product" : "Add New Product"}
-        </Modal.Title>
+        <Modal.Title>{product ? "Edit Product" : "Add Product"}</Modal.Title>
       </Modal.Header>
 
       <Form onSubmit={handleSubmit}>

@@ -4,11 +4,10 @@ import "./animations.css";
 import { AuthProvider } from "./Auth/AuthContext";
 import Login from "./Auth/login";
 import Register from "./Auth/register";
-import {
-  default as About,
-  default as AboutComponent,
-} from "./components/about";
+
+import About from "./components/about";
 import CardAnalytics from "./components/cardAnalytics";
+import CardAnalyticsDashboard from "./components/cardAnalyticsDashboard";
 import CardCreate from "./components/CardCreate";
 import CardEdit from "./components/CardEdit";
 import CardView from "./components/CardView";
@@ -35,7 +34,6 @@ function App() {
             {/* Public routes (accessible when not logged in) */}
             <Route element={<PublicRoute />}>
               <Route path="/login" element={<Login />} />
-              <Route path="/about" element={<AboutComponent />} />
               <Route path="/register" element={<Register />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route
@@ -57,6 +55,7 @@ function App() {
               <Route path="/edit/:id" element={<CardEdit />} />
               <Route path="/my-cards" element={<MyCards />} />
               <Route path="/analytics/:id" element={<CardAnalytics />} />
+              <Route path="/analytics" element={<CardAnalyticsDashboard />} />
             </Route>
 
             {/* Routes accessible to everyone */}

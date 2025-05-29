@@ -15,4 +15,32 @@ router.get(
   analyticsController.getCardAnalytics
 );
 
+// Get analytics for all user's cards (authenticated user)
+router.get(
+  "/all-cards",
+  authenticateUser,
+  analyticsController.getAllCardsAnalytics
+);
+
+// Get analytics summary (authenticated user)
+router.get(
+  "/summary",
+  authenticateUser,
+  analyticsController.getAnalyticsSummary
+);
+
+// Get top performing cards (authenticated user)
+router.get(
+  "/top-cards",
+  authenticateUser,
+  analyticsController.getTopPerformingCards
+);
+
+// Get recent activity (authenticated user)
+router.get(
+  "/recent-activity",
+  authenticateUser,
+  analyticsController.getRecentActivity
+);
+
 module.exports = router;

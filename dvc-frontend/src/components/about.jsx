@@ -51,8 +51,8 @@ const About = () => {
   const animateCounters = () => {
     const targets = {
       users: 50000,
-      cards: 125000,
-      countries: 85,
+      cards: 70000,
+      countries: 10,
       satisfaction: 98,
     };
     const duration = 2000; // 2 seconds
@@ -240,7 +240,7 @@ const About = () => {
                 <div className="stat-number">
                   {counters.cards.toLocaleString()}+
                 </div>
-                <div className="stat-label">Cards Created</div>
+                <div className="stat-label">Cards Creation</div>
               </div>
             </div>
             <div className="col-lg-3 col-md-6">

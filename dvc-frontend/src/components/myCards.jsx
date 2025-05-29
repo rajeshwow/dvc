@@ -38,7 +38,7 @@ const MyCards = () => {
   // Handle share
   const handleShare = (thisCardId, thisCardName) => {
     // Track share interaction
-    analyticsAPI.trackShare(thisCardId, "share_button");
+    analyticsAPI.trackShare(thisCardId, "share");
 
     if (navigator.share) {
       navigator
@@ -90,17 +90,17 @@ const MyCards = () => {
   return (
     <Container className="py-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>My Digital Cards</h1>
+        <h1>My Cards</h1>
         <Button as={Link} to="/create" variant="primary">
           <i className="bi bi-plus-lg me-2"></i>
-          Create New Card
+          Create Card
         </Button>
       </div>
 
       {cards.length === 0 ? (
         <Alert variant="info">
           <p className="mb-0">
-            You haven't created any cards yet. Click "Create New Card" to get
+            You haven't created any cards yet. Click "Create Card" to get
             started!
           </p>
         </Alert>

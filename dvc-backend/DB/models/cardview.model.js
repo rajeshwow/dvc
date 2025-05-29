@@ -32,7 +32,7 @@ const cardViewSchema = new mongoose.Schema(
     // Interaction data
     interactionType: {
       type: String,
-      enum: ["view", "contact_click", "social_click", "download", "share"],
+      enum: ["view", "share", "download", "contact_click", "social_click"], // UPDATED enum values
       default: "view",
     },
     interactionDetail: String,
