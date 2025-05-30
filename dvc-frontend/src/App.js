@@ -35,18 +35,11 @@ function App() {
             <Route element={<PublicRoute />}>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+
               <Route
                 path="/reset-password/:token"
                 element={<ResetPassword />}
               />
-              <Route
-                path="/terms-and-conditions"
-                element={<TermsOfService />}
-              />
-              <Route path="/cookie-policy" element={<CookiePolicy />} />
-              <Route path="/contact-us" element={<ContactUs />} />
-              <Route path="/faq" element={<FAQ />} />
             </Route>
 
             {/* Private routes (require authentication) */}
@@ -62,6 +55,11 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/view/:id" element={<CardView />} />
+            <Route path="/terms-and-conditions" element={<TermsOfService />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/cookie-policy" element={<CookiePolicy />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/faq" element={<FAQ />} />
 
             {/* Catch all for non-existent routes */}
             {/* <Route path="*" element={<NotFound />} /> */}
