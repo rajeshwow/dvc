@@ -94,9 +94,9 @@ const CardView = () => {
       );
     }
     try {
-      if (currentProduct && currentProduct.id) {
+      if (currentProduct && currentProduct._id) {
         // Update existing product
-        await cardAPI.updateCardProduct(id, currentProduct.id, productData);
+        await cardAPI.updateCardProduct(id, currentProduct._id, productData);
       } else {
         // Create new product
         await cardAPI.addCardProduct(id, productData);

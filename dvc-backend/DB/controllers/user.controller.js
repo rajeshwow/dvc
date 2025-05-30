@@ -30,7 +30,7 @@ const sendResetEmail = async (email, resetToken) => {
   const resetUrl =
     process.env.NODE_ENV === "development"
       ? `http://localhost:3000/reset-password/${resetToken}`
-      : `https://yourdomain.com/reset-password/${resetToken}`;
+      : `https://dvc-brown.vercel.app/reset-password/${resetToken}`;
 
   const mailOptions = {
     from: process.env.EMAIL_FROM,
