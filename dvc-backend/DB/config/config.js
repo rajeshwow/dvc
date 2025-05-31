@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-// mongoose.connect("mongodb://localhost:27017/DVC");
-
 const isProd = process.env.NODE_ENV === "production";
 const dbURI = isProd
   ? process.env.MONGODB_URI_PROD

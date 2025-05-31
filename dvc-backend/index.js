@@ -24,16 +24,13 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
   exposedHeaders: ["set-cookie"],
 };
+app.use(cors(corsOptions));
 
-// IMPORTANT: Body parser middleware
-// These need to be before any route handling
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Serve static files from the uploads directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-app.use(express.json());
-app.use(cors(corsOptions));
 
 app.use("/api/users", userRoutes);
 app.use("/api/cards", cardRoutes);
