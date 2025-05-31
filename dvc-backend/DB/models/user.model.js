@@ -42,8 +42,8 @@ const userSchema = new mongoose.Schema(
 userSchema.index(
   { passwordResetExpires: 1 },
   {
-    expireAfterSeconds: 0,
-    partialFilterExpression: { passwordResetExpires: { $exists: true } },
+    expireAfterSeconds: 3600,
+    sparse: true,
   }
 );
 
