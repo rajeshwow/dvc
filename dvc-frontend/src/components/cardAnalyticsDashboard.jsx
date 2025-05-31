@@ -62,38 +62,6 @@ const CardAnalyticsDashboard = () => {
     }
   };
 
-  const StatCard = ({ title, value, icon, color, change }) => (
-    <Card className="h-100 border-0 shadow-sm">
-      <Card.Body>
-        <div className="d-flex align-items-center">
-          <div className="flex-grow-1">
-            <p className="text-muted mb-1 small">{title}</p>
-            <h3 className="mb-0 fw-bold">{value}</h3>
-            {change && (
-              <small className={`text-${change >= 0 ? "success" : "danger"}`}>
-                <i
-                  className={`bi bi-arrow-${change >= 0 ? "up" : "down"} me-1`}
-                ></i>
-                {Math.abs(change)}% from last period
-              </small>
-            )}
-          </div>
-          <div
-            className={`rounded-circle d-flex align-items-center justify-content-center`}
-            style={{
-              width: "48px",
-              height: "48px",
-              backgroundColor: `var(--bs-${color})`,
-              color: "white",
-            }}
-          >
-            <i className={`bi ${icon} fs-5`}></i>
-          </div>
-        </div>
-      </Card.Body>
-    </Card>
-  );
-
   const ActivityItem = ({ activity }) => {
     const getActivityIcon = (type) => {
       switch (type) {
@@ -414,3 +382,35 @@ const CardAnalyticsDashboard = () => {
 };
 
 export default CardAnalyticsDashboard;
+
+export const StatCard = ({ title, value, icon, color, change }) => (
+  <Card className="h-100 border-0 shadow-sm">
+    <Card.Body>
+      <div className="d-flex align-items-center">
+        <div className="flex-grow-1">
+          <p className="text-muted mb-1 small">{title}</p>
+          <h3 className="mb-0 fw-bold">{value}</h3>
+          {change && (
+            <small className={`text-${change >= 0 ? "success" : "danger"}`}>
+              <i
+                className={`bi bi-arrow-${change >= 0 ? "up" : "down"} me-1`}
+              ></i>
+              {Math.abs(change)}% from last period
+            </small>
+          )}
+        </div>
+        <div
+          className={`rounded-circle d-flex align-items-center justify-content-center`}
+          style={{
+            width: "48px",
+            height: "48px",
+            backgroundColor: `var(--bs-${color})`,
+            color: "white",
+          }}
+        >
+          <i className={`bi ${icon} fs-5`}></i>
+        </div>
+      </div>
+    </Card.Body>
+  </Card>
+);

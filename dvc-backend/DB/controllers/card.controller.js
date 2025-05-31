@@ -37,6 +37,7 @@ exports.createCard = async (req, res) => {
 
 // Get a single card by ID
 exports.getCardById = async (req, res) => {
+  console.log("getting single card");
   try {
     const card = await Card.findById(req.params.id);
 
@@ -144,16 +145,6 @@ exports.addCardProduct = async (req, res) => {
         .json({ error: "Card not found or not authorized" });
     }
 
-    // Debug - log the incoming data
-    console.log("Request body:", req.body);
-    console.log("Request files:", req.files);
-    console.log(
-      "Product name received:",
-      req.body.name,
-      "Type:",
-      typeof req.body.name
-    );
-
     // Validate required fields early
     if (!req.body.name || req.body.name.trim() === "") {
       return res.status(400).json({ error: "Product name is required" });
@@ -255,16 +246,81 @@ exports.updateCardProduct = async (req, res) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
+    // Handle image updates
+    let imageUrls = [];
+
+    // Process new uploaded files
+    if (req.files && req.files.length > 0) {
+      req.files.forEach((file) => {
+        const host = req.get("host");
+        const protocol = req.protocol;
+        const imageUrl = `${protocol}://${host}/uploads/products/${file.filename}`;
+        imageUrls.push(imageUrl);
+      });
+    }
+
+    // Handle different image update scenarios
+    if (productData.removeExistingImage === "true") {
+      // Case 1: Existing image removed, no new image or with new image
+      // imageUrls will contain new images (if any) from above processing
+      console.log("Removing existing image, new images:", imageUrls);
+    } else if (productData.replaceExistingImage === "true") {
+      // Case 2: Replace existing image with new one
+      // imageUrls already contains the new image from above processing
+      console.log("Replacing existing image with new one:", imageUrls);
+    } else if (productData.productImages) {
+      // Case 3: Keep existing images (no changes to images)
+      try {
+        const existingImages = JSON.parse(productData.productImages);
+        if (Array.isArray(existingImages)) {
+          imageUrls = [...existingImages, ...imageUrls]; // Combine existing + any new
+        }
+      } catch (e) {
+        console.error("Error parsing existing images:", e);
+        // Use only new images if parsing fails
+      }
+    }
+    // If none of the above cases, imageUrls will only contain new uploaded images
+
+    // Prepare the updated product data
+    const updatedProductData = {
+      name: productData.name?.trim() || card.products[productIndex].name,
+      description:
+        productData.description || card.products[productIndex].description,
+      price: productData.price || card.products[productIndex].price,
+      category: productData.category || card.products[productIndex].category,
+      featured:
+        productData.featured === "true" || productData.featured === true,
+      ctaType: productData.ctaType || card.products[productIndex].ctaType,
+      ctaLink: productData.ctaLink || card.products[productIndex].ctaLink,
+      images: imageUrls, // This will be the processed image array
+    };
+
+    // Validate required fields
+    if (!updatedProductData.name || updatedProductData.name.trim() === "") {
+      return res.status(400).json({ error: "Product name is required" });
+    }
+
     // Update the product
     card.products[productIndex] = {
       ...card.products[productIndex].toObject(), // Convert to plain object
-      ...productData,
+      ...updatedProductData,
       _id: card.products[productIndex]._id, // Keep the same ID
     };
 
     await card.save();
 
-    res.json(card.products[productIndex]);
+    console.log("Product updated successfully:", {
+      productId,
+      name: updatedProductData.name,
+      imageCount: imageUrls.length,
+      images: imageUrls,
+    });
+
+    res.json({
+      message: "Product updated successfully",
+      product: card.products[productIndex],
+    });
   } catch (error) {
     console.error("Error updating product:", error);
     res.status(400).json({ error: error.message });

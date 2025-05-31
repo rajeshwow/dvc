@@ -26,6 +26,7 @@ import {
   YAxis,
 } from "recharts";
 import { analyticsAPI } from "../services/api";
+import { StatCard } from "./cardAnalyticsDashboard";
 
 const CardAnalytics = () => {
   const { id } = useParams();
@@ -162,62 +163,66 @@ const CardAnalytics = () => {
 
   return (
     <Container>
-      <h2 className="mb-4">Card Analytics</h2>
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
+        <div>
+          <h2 className="fw-bold mb-1">Card Analytics</h2>
+          <p className="text-muted mb-3 mb-md-0">
+            Track your digital card performance and engagement
+          </p>
+        </div>
+        <div className="d-flex gap-2">
+          {/* Card Filter */}
 
-      <Form.Group className="mb-4">
-        <Form.Label>Time Period</Form.Label>
-        <Form.Select
-          value={dateRange}
-          onChange={(e) => setDateRange(e.target.value)}
-        >
-          <option value="7">Last 7 Days</option>
-          <option value="30">Last 30 Days</option>
-          <option value="90">Last 90 Days</option>
-          <option value="all">All Time</option>
-        </Form.Select>
-      </Form.Group>
+          {/* Date Range Filter */}
+          <Form.Select
+            value={dateRange}
+            onChange={(e) => setDateRange(e.target.value)}
+            style={{ width: "auto" }}
+          >
+            <option value="7">Last 7 days</option>
+            <option value="30">Last 30 days</option>
+            <option value="90">Last 3 months</option>
+            <option value="365">Last year</option>
+          </Form.Select>
+        </div>
+      </div>
 
       <Row className="mb-4">
-        <Col md={3}>
-          <Card className="text-center h-100">
-            <Card.Body>
-              <h3 className="display-4 fw-bold text-primary">
-                {analytics?.summary?.totalViews}
-              </h3>
-              <p className="text-muted">Total Views</p>
-            </Card.Body>
-          </Card>
+        <Col sm={6} lg={3} className="mb-3">
+          <StatCard
+            title="Total Views"
+            value={analytics?.totalViews?.toLocaleString()}
+            icon="bi-eye"
+            color="primary"
+            change={12}
+          />
         </Col>
-        <Col md={3}>
-          <Card className="text-center h-100">
-            <Card.Body>
-              <h3 className="display-4 fw-bold text-success">
-                {analytics?.summary?.uniqueVisitors}
-              </h3>
-              <p className="text-muted">Unique Visitors</p>
-            </Card.Body>
-          </Card>
+        <Col sm={6} lg={3} className="mb-3">
+          <StatCard
+            title="Total Shares"
+            value={analytics?.totalShares?.toLocaleString()}
+            icon="bi-share"
+            color="success"
+            change={8}
+          />
         </Col>
-        <Col md={3}>
-          <Card className="text-center h-100">
-            <Card.Body>
-              <h3 className="display-4 fw-bold text-info">
-                {analytics?.summary?.contactClicks +
-                  analytics?.summary?.socialClicks}
-              </h3>
-              <p className="text-muted">Total Interactions</p>
-            </Card.Body>
-          </Card>
+        <Col sm={6} lg={3} className="mb-3">
+          <StatCard
+            title="Downloads"
+            value={analytics?.totalDownloads?.toLocaleString()}
+            icon="bi-download"
+            color="info"
+            change={-2}
+          />
         </Col>
-        <Col md={3}>
-          <Card className="text-center h-100">
-            <Card.Body>
-              <h3 className="display-4 fw-bold text-warning">
-                {analytics?.summary?.downloads}
-              </h3>
-              <p className="text-muted">Downloads</p>
-            </Card.Body>
-          </Card>
+        <Col sm={6} lg={3} className="mb-3">
+          <StatCard
+            title="Contacts"
+            value={analytics?.totalContacts?.toLocaleString()}
+            icon="bi-telephone"
+            color="warning"
+            change={15}
+          />
         </Col>
       </Row>
 

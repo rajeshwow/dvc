@@ -555,7 +555,7 @@ const ContactUs = () => {
             </div>
 
             {/* Contact Methods */}
-            <div className="contact-methods">
+            <div className="contact-methods text-center">
               {contactMethods.map((method, index) => (
                 <a
                   key={index}

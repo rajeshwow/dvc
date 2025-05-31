@@ -38,6 +38,7 @@ router.post(
 router.put(
   "/:cardId/products/:productId",
   authenticateUser,
+  uploadMultipleProductImages,
   cardController.updateCardProduct
 );
 

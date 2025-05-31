@@ -7,14 +7,17 @@ const ProductEditor = ({ show, onHide, product, onSave }) => {
     description: "",
     price: "",
     category: "",
-    image: null, // Changed back to single image
+    image: null,
     featured: false,
     ctaType: "inquiry",
     ctaLink: "",
   });
   const [loading, setLoading] = useState(false);
-  const [imagePreview, setImagePreview] = useState(""); // Single image preview
+  const [imagePreview, setImagePreview] = useState("");
   const [isDragging, setIsDragging] = useState(false);
+  // Add new state to track if existing image was removed
+  const [existingImageRemoved, setExistingImageRemoved] = useState(false);
+  const [originalImage, setOriginalImage] = useState(""); // Track original image
 
   // Initialize form data when product changes
   useEffect(() => {
@@ -25,7 +28,7 @@ const ProductEditor = ({ show, onHide, product, onSave }) => {
         description: product.description || "",
         price: product.price || "",
         category: product.category || "",
-        image: null, // Don't set file, just show preview
+        image: null,
         featured: product.featured || false,
         ctaType: product.ctaType || "inquiry",
         ctaLink: product.ctaLink || "",
@@ -37,6 +40,8 @@ const ProductEditor = ({ show, onHide, product, onSave }) => {
           ? product.images[0]
           : product.imageUrl || "";
       setImagePreview(existingImage);
+      setOriginalImage(existingImage); // Store original image
+      setExistingImageRemoved(false); // Reset removal flag
     } else {
       console.log("Adding new product");
       setFormData({
@@ -50,6 +55,8 @@ const ProductEditor = ({ show, onHide, product, onSave }) => {
         ctaLink: "",
       });
       setImagePreview("");
+      setOriginalImage("");
+      setExistingImageRemoved(false);
       setIsDragging(false);
     }
   }, [product]);
@@ -65,7 +72,7 @@ const ProductEditor = ({ show, onHide, product, onSave }) => {
 
   // Handle single image file selection
   const handleImageChange = (e) => {
-    const file = e.target.files[0]; // Only take the first file
+    const file = e.target.files[0];
     if (file) {
       processFile(file);
     }
@@ -82,6 +89,11 @@ const ProductEditor = ({ show, onHide, product, onSave }) => {
         setImagePreview(event.target.result);
       };
       reader.readAsDataURL(file);
+
+      // If we had an existing image and now adding a new one, mark existing as removed
+      if (originalImage && product) {
+        setExistingImageRemoved(true);
+      }
     }
   };
 
@@ -104,16 +116,21 @@ const ProductEditor = ({ show, onHide, product, onSave }) => {
       file.type.startsWith("image/")
     );
 
-    // Only process the first image file
     if (files.length > 0) {
       processFile(files[0]);
     }
   };
 
-  // Remove image
+  // Remove image - Updated to handle both new and existing images
   const removeImage = () => {
     setImagePreview("");
     setFormData((prev) => ({ ...prev, image: null }));
+
+    // If we're editing and removing an existing image, mark it as removed
+    if (product && originalImage) {
+      setExistingImageRemoved(true);
+    }
+
     // Reset file input
     const fileInput = document.getElementById("imageInput");
     if (fileInput) {
@@ -137,32 +154,41 @@ const ProductEditor = ({ show, onHide, product, onSave }) => {
       submitData.append("ctaType", formData.ctaType);
       submitData.append("ctaLink", formData.ctaLink);
 
-      // Append single image if selected
-      if (formData.image) {
-        submitData.append("images", formData.image);
-      }
-
-      // If editing and no new image selected, preserve existing image
-      if (
-        product &&
-        product.images &&
-        product.images.length > 0 &&
-        !formData.image
-      ) {
-        submitData.append("productImages", JSON.stringify([product.images[0]]));
+      // Handle image logic for editing
+      if (product) {
+        // If existing image was removed and no new image added
+        if (existingImageRemoved && !formData.image) {
+          submitData.append("removeExistingImage", "true");
+          submitData.append("productImages", JSON.stringify([])); // Empty array
+        }
+        // If existing image was removed and new image added
+        else if (existingImageRemoved && formData.image) {
+          submitData.append("removeExistingImage", "true");
+          submitData.append("images", formData.image);
+        }
+        // If new image added without removing existing (replace)
+        else if (formData.image) {
+          submitData.append("images", formData.image);
+          submitData.append("replaceExistingImage", "true");
+        }
+        // If no changes to image, preserve existing
+        else if (!existingImageRemoved && originalImage) {
+          submitData.append("productImages", JSON.stringify([originalImage]));
+        }
+      } else {
+        // For new products, just add the image if present
+        if (formData.image) {
+          submitData.append("images", formData.image);
+        }
       }
 
       console.log("Submitting product data:", {
         name: formData.name,
-        description: formData.description,
-        price: formData.price,
-        category: formData.category,
-        featured: formData.featured,
-        ctaType: formData.ctaType,
-        ctaLink: formData.ctaLink,
-        hasNewImage: !!formData.image,
-        imageFileName: formData.image?.name,
         isEditing: !!product,
+        hasNewImage: !!formData.image,
+        existingImageRemoved,
+        originalImage,
+        imageFileName: formData.image?.name,
       });
 
       await onSave(submitData);
@@ -179,6 +205,8 @@ const ProductEditor = ({ show, onHide, product, onSave }) => {
         ctaLink: "",
       });
       setImagePreview("");
+      setOriginalImage("");
+      setExistingImageRemoved(false);
     } catch (error) {
       console.error("Error in ProductEditor:", error);
       alert("Error saving product. Please check the console for details.");
@@ -200,6 +228,8 @@ const ProductEditor = ({ show, onHide, product, onSave }) => {
       ctaLink: "",
     });
     setImagePreview("");
+    setOriginalImage("");
+    setExistingImageRemoved(false);
     setIsDragging(false);
     onHide();
   };
@@ -227,56 +257,60 @@ const ProductEditor = ({ show, onHide, product, onSave }) => {
               </Form.Group>
 
               {/* Upload area positioned below name */}
-              <Form.Group className="mb-4">
-                <Form.Label>Product Image</Form.Label>
-                <div
-                  style={{
-                    border: "2px dashed #d1ecf1",
-                    borderRadius: "8px",
-                    padding: "3rem 2rem",
-                    textAlign: "center",
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    backgroundColor: isDragging ? "#b8daff" : "#e7f3ff",
-                    borderColor: isDragging ? "#007bff" : "#b8daff",
-                  }}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                  onClick={() => document.getElementById("imageInput").click()}
-                >
-                  <div className="d-flex flex-column align-items-center">
-                    <div
-                      style={{
-                        fontSize: "24px",
-                        marginBottom: "8px",
-                        color: "#6c757d",
-                      }}
-                    >
-                      +
+              {!imagePreview && (
+                <Form.Group className="mb-4">
+                  <Form.Label>Product Image</Form.Label>
+                  <div
+                    style={{
+                      border: "2px dashed #d1ecf1",
+                      borderRadius: "8px",
+                      padding: "3rem 2rem",
+                      textAlign: "center",
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                      backgroundColor: isDragging ? "#b8daff" : "#e7f3ff",
+                      borderColor: isDragging ? "#007bff" : "#b8daff",
+                    }}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClick={() =>
+                      document.getElementById("imageInput").click()
+                    }
+                  >
+                    <div className="d-flex flex-column align-items-center">
+                      <div
+                        style={{
+                          fontSize: "24px",
+                          marginBottom: "8px",
+                          color: "#6c757d",
+                        }}
+                      >
+                        +
+                      </div>
+                      <span style={{ color: "#6c757d", fontSize: "14px" }}>
+                        Upload
+                      </span>
+                      <span
+                        style={{
+                          color: "#6c757d",
+                          fontSize: "12px",
+                          marginTop: "4px",
+                        }}
+                      >
+                        One image only
+                      </span>
                     </div>
-                    <span style={{ color: "#6c757d", fontSize: "14px" }}>
-                      Upload
-                    </span>
-                    <span
-                      style={{
-                        color: "#6c757d",
-                        fontSize: "12px",
-                        marginTop: "4px",
-                      }}
-                    >
-                      One image only
-                    </span>
                   </div>
-                </div>
-                <Form.Control
-                  id="imageInput"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  style={{ display: "none" }}
-                />
-              </Form.Group>
+                  <Form.Control
+                    id="imageInput"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    style={{ display: "none" }}
+                  />
+                </Form.Group>
+              )}
 
               {/* Single Image Preview */}
               {imagePreview && (
