@@ -9,7 +9,7 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000, // 10 seconds timeout
+  timeout: 30000, // 30 seconds timeout
 });
 
 // Request interceptor to add auth token to requests
@@ -18,16 +18,9 @@ api.interceptors.request.use(
     // Get token from localStorage
     const token = localStorage.getItem("token");
 
-    // If token exists, add it to request headers
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-
-    // // If the request data is FormData, update the Content-Type header
-    // if (config.data instanceof FormData) {
-    //   // Remove the Content-Type header so the browser can set it with the boundary
-    //   delete config.headers["Content-Type"];
-    // }
 
     return config;
   },

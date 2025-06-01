@@ -102,9 +102,10 @@ const Register = () => {
 
       console.log("Registering user:", userData);
 
-      const response = userAPI.register(userData);
+      // ADD AWAIT HERE - This was missing!
+      const response = await userAPI.register(userData);
 
-      console.log("Registration successful:", response.data);
+      console.log("Registration successful:", response);
 
       // Show success message
       setSuccess(true);
@@ -142,11 +143,19 @@ const Register = () => {
           });
         } else {
           setServerError(
-            data.error || "Registration failed. Please try again."
+            data.error ||
+              data.message ||
+              "Registration failed. Please try again."
           );
         }
+      } else if (err.request) {
+        // Network error - request was made but no response received
+        setServerError(
+          "Cannot connect to server. Please check your connection."
+        );
       } else {
-        setServerError("Cannot connect to server. Please try again later.");
+        // Something else happened
+        setServerError("Registration failed. Please try again.");
       }
     } finally {
       setLoading(false);
