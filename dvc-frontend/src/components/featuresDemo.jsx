@@ -177,7 +177,7 @@ const FeaturesDemo = () => {
             ))}
           </div>
 
-          <div className="row">
+          {/* <div className="row">
             <div className="col-lg-6 mx-auto">
               <div className="text-center p-5">
                 <h3 className="text-white mb-4 h2">See It In Action</h3>
@@ -194,14 +194,14 @@ const FeaturesDemo = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="row mt-5">
             <div className="col text-center">
               <button
                 className="cta-button btn-lg"
                 onClick={() => {
-                  navigate("/login");
+                  navigate("/create");
                 }}
               >
                 Create Your Digital Presence Now

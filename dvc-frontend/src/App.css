@@ -20,6 +20,10 @@ body {
   color: var(--text-color) !important;
 }
 
+.tab-title {
+  color: var(--text-color) !important;
+}
+
 h1,
 h2,
 h3,
@@ -52,13 +56,36 @@ small {
 .navbar-brand,
 .nav-link,
 .navbar-nav .nav-link {
-  color: var(--accent-color) !important;
+  color: var(--accent-color);
   font-weight: 500;
 }
 
 .navbar-nav .nav-link:hover {
   color: #ffffff !important;
   /* optional */
+}
+
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link.show {
+  color: #ffffff;
+}
+
+/* Fix for tab header color */
+
+.nav-tabs .nav-link {
+  color: var(--text-color) !important;
+  font-weight: 500;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--title-color) !important;
+  background-color: transparent !important;
+  border-color: var(--accent-color) transparent transparent !important;
+  /* Optional underline */
+}
+
+.nav-tabs .nav-link:hover {
+  color: var(--accent-color) !important;
 }
 
 a {
