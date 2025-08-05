@@ -663,7 +663,6 @@ exports.googleLogin = async (req, res) => {
 
     let user = await Users.findOne({ email });
 
-    // If user does not exist, create new one
     if (!user) {
       user = new Users({
         email,
