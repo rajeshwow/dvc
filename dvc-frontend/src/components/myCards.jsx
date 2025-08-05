@@ -45,7 +45,7 @@ const MyCards = () => {
         .share({
           title: `${thisCardName}'s Digital Card`,
           text: `Check out ${thisCardName}'s digital business card`,
-          url: window.location.href,
+          url: `${window.location.origin}/view/${thisCardId}`,
         })
         .then(() => console.log("Shared successfully"))
         .catch((error) => console.log("Error sharing:", error));

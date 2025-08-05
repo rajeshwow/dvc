@@ -110,7 +110,7 @@ const QRCodeGenerator = ({ cardId, userName }) => {
             onClick={shareUrlToWhatsApp}
             variant="outline-primary"
           >
-            <i className="bi bi-whatsapp"></i>
+            <i className="bi bi-share-fill"></i>
           </Button>
           <Button
             title="Download QR Code"
