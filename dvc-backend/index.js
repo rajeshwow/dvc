@@ -12,7 +12,7 @@ const corsOptions = {
   // In production, use your specific domains
   origin:
     process.env.NODE_ENV === "production"
-      ? ["https://dvc-brown.vercel.app"]
+      ? ["https://dvc-brown.vercel.app", "https://www.cardflare.in/"]
       : [
           "http://localhost:3000",
           "http://localhost:3001",
