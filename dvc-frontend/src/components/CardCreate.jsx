@@ -835,9 +835,9 @@ const CardCreate = () => {
                   </Button>
                 ) : (
                   <Button
-                    variant="success"
                     onClick={handleSave}
                     disabled={loading}
+                    className="btn-primary"
                   >
                     {loading ? (
                       <>
