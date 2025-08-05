@@ -8,29 +8,23 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // ✅ separate state
 
   // Check for existing token on load
   useEffect(() => {
     const checkLoggedIn = async () => {
       try {
-        // Get token from localStorage
         const token = localStorage.getItem("token");
-
         if (token) {
-          // In a real app, you would verify the token here
-          // For example, by making a request to your backend
-
-          // For now, we'll just set a user object
-          setUser({
-            token,
-            isLoggedIn: true,
-          });
+          // Just mocking user for now
+          setUser({ token });
+          setIsLoggedIn(true); // ✅ ensure this updates
         }
       } catch (error) {
         console.error("Auth initialization error:", error);
-        // Clear invalid auth data
         localStorage.removeItem("token");
         setUser(null);
+        setIsLoggedIn(false); // ✅ reset on error
       } finally {
         setLoading(false);
       }
@@ -39,25 +33,16 @@ export const AuthProvider = ({ children }) => {
     checkLoggedIn();
   }, []);
 
-  // Login function
-  // const login = (userData) => {
-  //   setUser({
-  //     ...userData,
-  //     isLoggedIn: true,
-  //   });
-  // };
   const login = async (userData) => {
-    setUser({
-      ...userData,
-      isLoggedIn: true,
-    });
-    return true; // Signal login complete
+    setUser(userData);
+    setIsLoggedIn(true); // ✅ trigger update
+    return true;
   };
 
-  // Logout function
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);
+    setIsLoggedIn(false); // ✅ trigger update
   };
 
   // Context value
@@ -65,10 +50,10 @@ export const AuthProvider = ({ children }) => {
     user,
     login,
     logout,
-    isLoggedIn: !!user,
+    isLoggedIn,
     loading,
   };
-
+  if (loading) return null;
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 

@@ -1,0 +1,31 @@
+/* src/themes/default.css */
+
+:root {
+  --primary-color: #003366;
+  /* Royal Blue */
+  --accent-color: #ffd700;
+  /* ffa500 */
+  /* Gold */
+  --background-color: #f4f6f8;
+  /* Light Gray */
+  --text-color: #1a1a1a;
+  /* Deep Charcoal */
+  --button-color: #003366;
+  /* Royal Blue */
+  --button-text-color: #ffffff;
+  /* White */
+  --title-color: #003366;
+  /* Heading Color */
+  --subtitle-color: #666666;
+  /* Optional */
+  --section-bg: #ffffff;
+  /* Pure White */
+  --section-text: #003366;
+  /* Royal Blue */
+  --highlight-color: #ffd700;
+  /* Gold */
+  --footer-bg: #001f3f;
+  /* Deep Navy */
+  --footer-text: #ffffff;
+  --footer-link: #ffd700;
+}

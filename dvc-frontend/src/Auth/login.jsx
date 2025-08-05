@@ -1,5 +1,7 @@
 // eslint-disable-next-line import/default
+import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+
 import { useState } from "react";
 import {
   Alert,
@@ -22,6 +24,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -34,7 +37,7 @@ const Login = () => {
   const [forgotError, setForgotError] = useState("");
 
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, isLoggedIn } = useAuth();
 
   // Handle input changes
   const handleChange = (e) => {
@@ -136,7 +139,7 @@ const Login = () => {
           };
 
           // Call login to update auth context
-          login(userData);
+          await login(userData);
           console.log("Auth context updated with user data");
 
           // Short delay before navigation to ensure context updates
@@ -171,13 +174,61 @@ const Login = () => {
                   <h2 className="fw-bold">Welcome Back</h2>
                   <p className="text-muted">Please sign in to your account</p>
                 </div>
-
                 {error && (
                   <Alert variant="danger" className="mb-4">
                     {error}
                   </Alert>
                 )}
+                <div className="text-center my-3">
+                  <GoogleLogin
+                    onSuccess={async (credentialResponse) => {
+                      try {
+                        const decoded = jwtDecode(
+                          credentialResponse.credential
+                        );
+                        console.log("✅ Google decoded:", decoded);
 
+                        const response = await userAPI.googleLogin(decoded);
+                        console.log("✅ Server response:", response);
+
+                        if (response && response.token) {
+                          localStorage.setItem("token", response.token);
+
+                          await login({
+                            user: response.user,
+                            token: response.token,
+                          });
+
+                          // ✅ Add slight delay before navigation
+                          setTimeout(() => {
+                            console.log("Navigating after Google login...");
+                            navigate("/my-cards");
+                          }, 200); // Slight delay lets AuthContext update
+                        } else {
+                          console.log("❌ No token in response");
+                          setError("No token received from server.");
+                        }
+                      } catch (err) {
+                        console.error("Google Login Error:", err);
+                        setError("Google login failed. Please try again.");
+                      }
+                    }}
+                    onError={() => {
+                      setError("Google login failed. Please try again.");
+                    }}
+                  />
+                </div>
+                <div
+                  style={{
+                    textAlign: "center",
+                    marginBottom: "1rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  OR
+                </div>
                 <Form onSubmit={handleSubmit}>
                   <Form.Group className="mb-3">
                     <Form.Label>Email address</Form.Label>

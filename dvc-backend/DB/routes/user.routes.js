@@ -9,6 +9,9 @@ router.delete("/:id", userController.deleteUser);
 router.post("/login", userController.loginUser);
 router.post("/register", userController.createUser);
 
+// Google login route
+router.post("/google-login", userController.googleLogin); // ✅ THIS LINE
+
 // Password reset routes
 router.post("/forgot-password", userController.forgotPassword);
 router.post("/reset-password", userController.resetPassword);

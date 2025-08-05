@@ -653,3 +653,50 @@ exports.getResetTokenInfo = async (req, res) => {
     res.status(500).json({ error: "Error validating reset token" });
   }
 };
+
+exports.googleLogin = async (req, res) => {
+  try {
+    const { email, name, sub, picture } = req.body;
+    if (!email || !sub) {
+      return res.status(400).json({ error: "Invalid Google user data" });
+    }
+
+    let user = await Users.findOne({ email });
+
+    // If user does not exist, create new one
+    if (!user) {
+      user = new Users({
+        email,
+        name,
+        googleId: sub,
+        profilePicture: picture,
+        // password: false, // Not required for Google users
+      });
+      await user.save();
+    }
+
+    // Create token
+    const userForToken = {
+      id: user._id,
+      email: user.email,
+    };
+
+    const token = jwt.sign(userForToken, JWT_SECRET, {
+      expiresIn: JWT_EXPIRES_IN,
+    });
+
+    res.json({
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        profilePicture: user.profilePicture,
+      },
+      token,
+      expiresIn: JWT_EXPIRES_IN,
+    });
+  } catch (error) {
+    console.error("Google Login Error:", error);
+    res.status(500).json({ error: "Server error during Google login" });
+  }
+};

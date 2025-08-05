@@ -1,9 +1,12 @@
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./animations.css";
+import "./App.css";
 import { AuthProvider } from "./Auth/AuthContext";
 import Login from "./Auth/login";
 import Register from "./Auth/register";
+import "./theme/default.css";
 
 import About from "./components/about";
 import CardAnalytics from "./components/cardAnalytics";
@@ -26,47 +29,52 @@ import TermsOfService from "./components/termsconditions";
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <ScrollToTop />
-        <LayoutComponent>
-          <Routes>
-            {/* Public routes (accessible when not logged in) */}
-            <Route element={<PublicRoute />}>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+    <GoogleOAuthProvider clientId="597378065819-8e1v0f88ndrkp4uf4jhjv6sqtfvkp0ls.apps.googleusercontent.com">
+      <AuthProvider>
+        <Router>
+          <ScrollToTop />
+          <LayoutComponent>
+            <Routes>
+              {/* Public routes (accessible when not logged in) */}
+              <Route element={<PublicRoute />}>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
 
+                <Route
+                  path="/reset-password/:token"
+                  element={<ResetPassword />}
+                />
+              </Route>
+
+              {/* Private routes (require authentication) */}
+              <Route element={<PrivateRoute />}>
+                <Route path="/create" element={<CardCreate />} />
+                <Route path="/edit/:id" element={<CardEdit />} />
+                <Route path="/my-cards" element={<MyCards />} />
+                <Route path="/analytics/:id" element={<CardAnalytics />} />
+                <Route path="/analytics" element={<CardAnalyticsDashboard />} />
+              </Route>
+
+              {/* Routes accessible to everyone */}
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/view/:id" element={<CardView />} />
               <Route
-                path="/reset-password/:token"
-                element={<ResetPassword />}
+                path="/terms-and-conditions"
+                element={<TermsOfService />}
               />
-            </Route>
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/cookie-policy" element={<CookiePolicy />} />
+              <Route path="/contact-us" element={<ContactUs />} />
+              <Route path="/faq" element={<FAQ />} />
 
-            {/* Private routes (require authentication) */}
-            <Route element={<PrivateRoute />}>
-              <Route path="/create" element={<CardCreate />} />
-              <Route path="/edit/:id" element={<CardEdit />} />
-              <Route path="/my-cards" element={<MyCards />} />
-              <Route path="/analytics/:id" element={<CardAnalytics />} />
-              <Route path="/analytics" element={<CardAnalyticsDashboard />} />
-            </Route>
-
-            {/* Routes accessible to everyone */}
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/view/:id" element={<CardView />} />
-            <Route path="/terms-and-conditions" element={<TermsOfService />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/cookie-policy" element={<CookiePolicy />} />
-            <Route path="/contact-us" element={<ContactUs />} />
-            <Route path="/faq" element={<FAQ />} />
-
-            {/* Catch all for non-existent routes */}
-            {/* <Route path="*" element={<NotFound />} /> */}
-          </Routes>
-        </LayoutComponent>
-      </Router>
-    </AuthProvider>
+              {/* Catch all for non-existent routes */}
+              {/* <Route path="*" element={<NotFound />} /> */}
+            </Routes>
+          </LayoutComponent>
+        </Router>
+      </AuthProvider>
+    </GoogleOAuthProvider>
   );
 }
 

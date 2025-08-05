@@ -1,6 +1,88 @@
+@import "./theme/default.css";
 .App {
   text-align: center;
 }
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.btn-primary {
+  background-color: var(--button-color) !important;
+  color: var(--button-text-color) !important;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-color) !important;
+  color: var(--text-color) !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--title-color);
+  font-weight: bold;
+}
+
+p,
+span,
+small {
+  color: var(--text-color);
+}
+
+.navbar {
+  background-color: var(--primary-color) !important;
+}
+
+.navbar-toggler {
+  border-color: var(--accent-color) !important;
+  /* optional: border */
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%23FFD700' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.navbar-brand,
+.nav-link,
+.navbar-nav .nav-link {
+  color: var(--accent-color) !important;
+  font-weight: 500;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #ffffff !important;
+  /* optional */
+}
+
+a {
+  color: var(--primary-color);
+}
+
+a:hover {
+  color: var(--accent-color);
+}
+
+/* ----------------------------------------- */
+
+/* Footer Example */
+
+.footer {
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+}
+
+.footer a {
+  color: var(--footer-link);
+}
+
+/* --------------------------------------------------- */
 
 .App-logo {
   height: 40vmin;

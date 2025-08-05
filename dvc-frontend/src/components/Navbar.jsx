@@ -12,7 +12,7 @@ const Navbars = () => {
   };
 
   return (
-    <Navbar bg="light" expand="lg" className="mb-3">
+    <Navbar bg="light" expand="lg" className="navbar mb-3">
       <Container>
         <Navbar.Brand as={NavLink} to="/">
           DVC
@@ -40,11 +40,7 @@ const Navbars = () => {
           {/* Right-aligned logout button */}
           <Nav>
             {user ? (
-              <Button
-                variant="outline-primary"
-                onClick={handleLogout}
-                className="ms-2"
-              >
+              <Button onClick={handleLogout} className="ms-2">
                 Logout
               </Button>
             ) : (

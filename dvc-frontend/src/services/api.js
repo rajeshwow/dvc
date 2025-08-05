@@ -218,6 +218,10 @@ export const userAPI = {
     localStorage.removeItem("user");
     // Optionally clear other user-related data from localStorage
   },
+  googleLogin: async (googleUser) => {
+    const response = await api.post(`/api/users/google-login`, googleUser);
+    return response.data;
+  },
 };
 
 // Analytics API calls

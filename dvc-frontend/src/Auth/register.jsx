@@ -51,9 +51,9 @@ const Register = () => {
     const newErrors = {};
 
     // Name validation
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
-    }
+    // if (!formData.name.trim()) {
+    //   newErrors.name = "Name is required";
+    // }
 
     // Email validation
     if (!formData.email) {
@@ -188,25 +188,6 @@ const Register = () => {
               )}
 
               <Form onSubmit={handleSubmit}>
-                {/* Name Field */}
-                <Form.Group className="mb-3">
-                  <Form.Label>Full Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="name"
-                    placeholder="Enter your full name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    isInvalid={!!errors.name}
-                    disabled={loading}
-                    className="py-2"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.name}
-                  </Form.Control.Feedback>
-                </Form.Group>
-
-                {/* Email Field */}
                 <Form.Group className="mb-3">
                   <Form.Label>Email address</Form.Label>
                   <Form.Control
@@ -223,45 +204,60 @@ const Register = () => {
                     {errors.email}
                   </Form.Control.Feedback>
                 </Form.Group>
-
-                {/* Password Field */}
-                <Form.Group className="mb-3">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="password"
-                    placeholder="Create a password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    isInvalid={!!errors.password}
-                    disabled={loading}
-                    className="py-2"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.password}
-                  </Form.Control.Feedback>
-                  <Form.Text className="text-muted">
-                    Password must be at least 6 characters long
-                  </Form.Text>
-                </Form.Group>
-
-                {/* Confirm Password Field */}
-                <Form.Group className="mb-4">
-                  <Form.Label>Confirm Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    name="confirmPassword"
-                    placeholder="Confirm your password"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    isInvalid={!!errors.confirmPassword}
-                    disabled={loading}
-                    className="py-2"
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.confirmPassword}
-                  </Form.Control.Feedback>
-                </Form.Group>
+                <Row>
+                  <Col span={12}>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Password</Form.Label>
+                      <Form.Control
+                        type="password"
+                        name="password"
+                        placeholder="Create a password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        isInvalid={!!errors.password}
+                        disabled={loading}
+                        className="py-2"
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.password}
+                      </Form.Control.Feedback>
+                      <Form.Text className="text-muted">
+                        Password must be at least 6 characters long
+                      </Form.Text>
+                    </Form.Group>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Group className="mb-4">
+                      <Form.Label>Confirm Password</Form.Label>
+                      <Form.Control
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="Confirm your password"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        isInvalid={!!errors.confirmPassword}
+                        disabled={loading}
+                        className="py-2"
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.confirmPassword}
+                      </Form.Control.Feedback>
+                      {formData.confirmPassword &&
+                        formData.password === formData.confirmPassword &&
+                        !errors.confirmPassword && (
+                          <div
+                            style={{
+                              color: "green",
+                              fontSize: "0.9rem",
+                              marginTop: "4px",
+                            }}
+                          >
+                            ✅ Passwords match
+                          </div>
+                        )}
+                    </Form.Group>
+                  </Col>
+                </Row>
 
                 {/* Submit Button */}
                 <div className="d-grid">

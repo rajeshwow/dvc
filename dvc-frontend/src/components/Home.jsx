@@ -21,9 +21,7 @@ const Home = () => {
         <Row>
           {/* Left Column - Information and Form */}
           <Col md={6}>
-            <h1 className="display-5 fw-bold text-primary mb-4">
-              Create Your Digital Visiting Card
-            </h1>
+            <h1>Create Your Digital Visiting Card</h1>
             <p className="lead mb-4">
               Share your professional identity instantly with a modern digital
               card. Stand out from the crowd with interactive features and easy
@@ -56,8 +54,12 @@ const Home = () => {
                 </div>
               </div>
             </div>
-            <Button onClick={handleMakeButtonClick} variant="primary">
-              Let's Make
+            <Button
+              className="btn-primary "
+              onClick={handleMakeButtonClick}
+              // variant="primary"
+            >
+              Let's Create
             </Button>
           </Col>
 
