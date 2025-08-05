@@ -335,8 +335,8 @@
 }
 
 .floating-card:nth-of-type(1) {
-  top: 20%;
-  left: 10%;
+  top: 30%;
+  left: 20%;
   animation-delay: 0s;
   background: white !important;
   box-shadow: 0 4px 12px rgba(255, 215, 0, 0.1) !important;

@@ -46,9 +46,9 @@ const ContactUs = () => {
       icon: "📧",
       title: "Email Support",
       description: "Get in touch via email",
-      contact: "support@dvc-cards.com",
+      contact: "support@CardFlare-cards.com",
       responseTime: "Within 24 hours",
-      action: "mailto:support@dvc-cards.com",
+      action: "mailto:support@CardFlare-cards.com",
     },
     {
       icon: "💬",
@@ -440,8 +440,8 @@ const ContactUs = () => {
           <div className="contact-hero">
             <h1 className="hero-title-contact">Get in Touch</h1>
             <p className="hero-subtitle-contact">
-              Have questions about DVC? We're here to help! Reach out to our
-              friendly support team and we'll get back to you as soon as
+              Have questions about CardFlare? We're here to help! Reach out to
+              our friendly support team and we'll get back to you as soon as
               possible.
             </p>
           </div>

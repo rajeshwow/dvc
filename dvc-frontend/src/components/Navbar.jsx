@@ -1,6 +1,7 @@
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../Auth/AuthContext"; // Adjust path as needed
+import brandLogo from "../assets/images/cardflare_logo.svg"; // Adjust path as needed
 
 const Navbars = () => {
   const navigate = useNavigate();
@@ -15,7 +16,12 @@ const Navbars = () => {
     <Navbar bg="light" expand="lg" className="navbar mb-3">
       <Container>
         <Navbar.Brand as={NavLink} to="/">
-          DVC
+          <img
+            src={brandLogo}
+            alt="Brand Logo"
+            style={{ maxWidth: "50px" }}
+            // className="brand-logo"
+          />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">

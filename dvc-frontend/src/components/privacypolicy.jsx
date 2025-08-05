@@ -114,7 +114,7 @@ const PrivacyPolicy = () => {
         </div>
 
         <div className="highlight">
-          <strong>Your Privacy Matters:</strong> At DVC (Digital Visiting
+          <strong>Your Privacy Matters:</strong> At CardFlare (Digital Visiting
           Cards), we are committed to protecting your personal information and
           being transparent about how we collect, use, and share your data.
         </div>
@@ -357,11 +357,11 @@ const PrivacyPolicy = () => {
           </p>
           <ul className="list">
             <li>
-              <strong>Email:</strong> privacy@dvc-cards.com
+              <strong>Email:</strong> privacy@CardFlare-cards.com
             </li>
             <li>
-              <strong>Address:</strong> DVC Privacy Team, 123 Digital Avenue,
-              Tech City, TC 12345
+              <strong>Address:</strong> CardFlare Privacy Team, 123 Digital
+              Avenue, Tech City, TC 12345
             </li>
             <li>
               <strong>Phone:</strong> +1 (555) 123-4567

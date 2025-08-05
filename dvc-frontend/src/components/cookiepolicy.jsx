@@ -387,7 +387,7 @@ const CookiePolicy = () => {
         <div className="section">
           <h2 className="section-title">1. How We Use Cookies</h2>
           <div className="section-content">
-            <p>DVC uses cookies and similar tracking technologies to:</p>
+            <p>CardFlare uses cookies and similar tracking technologies to:</p>
             <ul className="list">
               <li>Keep you signed in to your account</li>
               <li>Remember your preferences and settings</li>
@@ -657,14 +657,14 @@ const CookiePolicy = () => {
           </p>
           <ul className="list">
             <li>
-              <strong>Email:</strong> privacy@dvc-cards.com
+              <strong>Email:</strong> privacy@CardFlare-cards.com
             </li>
             <li>
               <strong>Subject Line:</strong> "Cookie Policy Inquiry"
             </li>
             <li>
-              <strong>Address:</strong> DVC Privacy Team, 123 Digital Avenue,
-              Tech City, TC 12345
+              <strong>Address:</strong> CardFlare Privacy Team, 123 Digital
+              Avenue, Tech City, TC 12345
             </li>
           </ul>
           <p>

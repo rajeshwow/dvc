@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import brandLogo from "../assets/images/cardflare_logo.svg"; // Adjust path as needed
 import "../footer.css";
 
 const ElegantFooter = () => {
@@ -52,7 +53,12 @@ const ElegantFooter = () => {
               {/* Brand Section */}
               <div className="col-lg-4 col-md-6">
                 <div className="footer-brand">
-                  <h3 className="brand-logo">DVC</h3>
+                  <img
+                    src={brandLogo}
+                    alt="Brand Logo"
+                    style={{ maxWidth: "100px" }}
+                  />
+                  <h3 style={{ color: "#ffd700" }}>CardFlare</h3>
                   <p className="brand-tagline">
                     Create stunning digital visiting cards that make lasting
                     impressions. Share your professional identity instantly with
@@ -169,8 +175,7 @@ const ElegantFooter = () => {
           <div className="container">
             <div className="footer-bottom-content">
               <div className="copyright">
-                © {currentYear} DVC - Digital Visiting Cards. All rights
-                reserved.
+                © {currentYear} CardFlare. All rights reserved.
               </div>
               <div className="footer-bottom-links">
                 {legalLinks.map((link, index) => (

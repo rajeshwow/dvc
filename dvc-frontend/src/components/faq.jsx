@@ -41,7 +41,7 @@ const FAQ = () => {
     {
       id: 2,
       category: "getting-started",
-      question: "Is DVC really free to use?",
+      question: "Is CardFlare really free to use?",
       answer:
         "Yes! We offer a generous free plan that includes basic card creation, sharing via QR code and link, and essential analytics. Premium plans unlock advanced features like custom branding, detailed analytics, and priority support.",
       popular: true,
@@ -67,7 +67,7 @@ const FAQ = () => {
       category: "technical",
       question: "Do my contacts need to download an app?",
       answer:
-        "No! That's the beauty of DVC. Your digital visiting card works on any device with a web browser. Recipients simply scan your QR code or click your link to view your information instantly.",
+        "No! That's the beauty of CardFlare. Your digital visiting card works on any device with a web browser. Recipients simply scan your QR code or click your link to view your information instantly.",
       popular: false,
     },
     {
@@ -105,7 +105,7 @@ const FAQ = () => {
     {
       id: 10,
       category: "technical",
-      question: "Is my data secure on DVC?",
+      question: "Is my data secure on CardFlare?",
       answer:
         "Absolutely! We use enterprise-grade security with SSL encryption, secure data centers, regular backups, and comply with GDPR and other privacy regulations. Your data is safe and private with us.",
       popular: false,
@@ -131,7 +131,7 @@ const FAQ = () => {
       category: "customization",
       question: "Can I add my company branding?",
       answer:
-        "Yes! Premium users can add custom logos, brand colors, custom domains, and even remove DVC branding entirely. Perfect for businesses that want a fully branded experience.",
+        "Yes! Premium users can add custom logos, brand colors, custom domains, and even remove CardFlare branding entirely. Perfect for businesses that want a fully branded experience.",
       popular: false,
     },
     {
@@ -485,8 +485,8 @@ const FAQ = () => {
           <div className="faq-hero">
             <h1 className="hero-title-faq">Frequently Asked Questions</h1>
             <p className="hero-subtitle-faq">
-              Find answers to common questions about DVC. Can't find what you're
-              looking for? Our support team is always ready to help!
+              Find answers to common questions about CardFlare. Can't find what
+              you're looking for? Our support team is always ready to help!
             </p>
           </div>
 
@@ -585,7 +585,7 @@ const FAQ = () => {
             <h3 className="help-title">Still need help?</h3>
             <p className="help-text">
               Can't find the answer you're looking for? Our friendly support
-              team is here to help you succeed with DVC.
+              team is here to help you succeed with CardFlare.
             </p>
             <div className="help-buttons">
               <a

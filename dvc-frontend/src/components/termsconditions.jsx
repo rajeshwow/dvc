@@ -121,7 +121,7 @@ const TermsOfService = () => {
         </div>
 
         <div className="highlight">
-          <strong>Agreement:</strong> By accessing or using DVC (Digital
+          <strong>Agreement:</strong> By accessing or using CardFlare (Digital
           Visiting Cards), you agree to be bound by these Terms of Service.
           Please read them carefully.
         </div>
@@ -130,9 +130,9 @@ const TermsOfService = () => {
           <h2 className="section-title">1. Acceptance of Terms</h2>
           <div className="section-content">
             <p>
-              These Terms of Service ("Terms") govern your use of the DVC
+              These Terms of Service ("Terms") govern your use of the CardFlare
               platform, website, and related services (collectively, the
-              "Service") operated by DVC Inc. ("we," "us," or "our").
+              "Service") operated by CardFlare Inc. ("we," "us," or "our").
             </p>
             <p>
               By creating an account or using our Service, you acknowledge that
@@ -146,8 +146,8 @@ const TermsOfService = () => {
           <h2 className="section-title">2. Description of Service</h2>
           <div className="section-content">
             <p>
-              DVC provides a platform for creating, customizing, and sharing
-              digital visiting cards. Our Service includes:
+              CardFlare provides a platform for creating, customizing, and
+              sharing digital visiting cards. Our Service includes:
             </p>
             <ul className="list">
               <li>Digital business card creation tools</li>
@@ -182,8 +182,8 @@ const TermsOfService = () => {
             <h3 className="subsection-title">Eligibility</h3>
             <p>
               You must be at least 18 years old to use our Service. By using
-              DVC, you represent that you meet this age requirement and have the
-              legal capacity to enter into these Terms.
+              CardFlare, you represent that you meet this age requirement and
+              have the legal capacity to enter into these Terms.
             </p>
           </div>
         </div>
@@ -249,8 +249,9 @@ const TermsOfService = () => {
           <div className="subsection">
             <h3 className="subsection-title">Our Intellectual Property</h3>
             <p>
-              The DVC platform, including all software, designs, text, graphics,
-              and trademarks, is owned by us or our licensors. You may not:
+              The CardFlare platform, including all software, designs, text,
+              graphics, and trademarks, is owned by us or our licensors. You may
+              not:
             </p>
             <ul className="list">
               <li>Copy, modify, or distribute our proprietary content</li>
@@ -266,8 +267,8 @@ const TermsOfService = () => {
           <div className="subsection">
             <h3 className="subsection-title">Subscription Plans</h3>
             <p>
-              DVC offers both free and paid subscription plans. Paid features
-              include:
+              CardFlare offers both free and paid subscription plans. Paid
+              features include:
             </p>
             <ul className="list">
               <li>Advanced customization options</li>
@@ -491,10 +492,10 @@ const TermsOfService = () => {
           <p>Questions about these Terms of Service? Contact us:</p>
           <ul className="list">
             <li>
-              <strong>Email:</strong> legal@dvc-cards.com
+              <strong>Email:</strong> legal@CardFlare-cards.com
             </li>
             <li>
-              <strong>Address:</strong> DVC Legal Department, 123 Digital
+              <strong>Address:</strong> CardFlare Legal Department, 123 Digital
               Avenue, Tech City, TC 12345
             </li>
             <li>
