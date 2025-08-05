@@ -673,7 +673,6 @@ exports.googleLogin = async (req, res) => {
       await user.save();
     }
 
-    // Create token
     const userForToken = {
       id: user._id,
       email: user.email,
