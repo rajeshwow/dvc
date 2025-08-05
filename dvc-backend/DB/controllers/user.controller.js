@@ -669,7 +669,6 @@ exports.googleLogin = async (req, res) => {
         name,
         googleId: sub,
         profilePicture: picture,
-        // password: false, // Not required for Google users
       });
       await user.save();
     }
