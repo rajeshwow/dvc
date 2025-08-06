@@ -29,9 +29,8 @@ import ScrollToTop from "./components/scrollToTop";
 
 import { useEffect } from "react";
 import TermsOfService from "./components/termsconditions";
-import usePageTracking from "./GoogleAnalytics/userpagetracking";
+import PageTracker from "./GoogleAnalytics/pageTracker";
 function App() {
-  usePageTracking();
   useEffect(() => {
     ReactGA.initialize("G-EW339CJBRE");
   }, []);
@@ -40,6 +39,7 @@ function App() {
       <AuthProvider>
         <Router>
           <ScrollToTop />
+          <PageTracker />
           <LayoutComponent>
             <Routes>
               {/* Public routes (accessible when not logged in) */}
