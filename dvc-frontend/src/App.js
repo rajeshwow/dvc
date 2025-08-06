@@ -8,6 +8,7 @@ import Login from "./Auth/login";
 import Register from "./Auth/register";
 import "./theme/default.css";
 
+import ReactGA from "react-ga4";
 import About from "./components/about";
 import CardAnalytics from "./components/cardAnalytics";
 import CardAnalyticsDashboard from "./components/cardAnalyticsDashboard";
@@ -25,9 +26,15 @@ import PrivateRoute from "./components/PrivateRoute";
 import PublicRoute from "./components/PublicRoute";
 import ResetPassword from "./components/resetpassword";
 import ScrollToTop from "./components/scrollToTop";
-import TermsOfService from "./components/termsconditions";
 
+import { useEffect } from "react";
+import TermsOfService from "./components/termsconditions";
+import usePageTracking from "./GoogleAnalytics/userpagetracking";
 function App() {
+  usePageTracking();
+  useEffect(() => {
+    ReactGA.initialize("G-EW339CJBRE");
+  }, []);
   return (
     <GoogleOAuthProvider clientId="597378065819-8e1v0f88ndrkp4uf4jhjv6sqtfvkp0ls.apps.googleusercontent.com">
       <AuthProvider>
