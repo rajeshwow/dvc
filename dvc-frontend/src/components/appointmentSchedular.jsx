@@ -141,7 +141,6 @@ const AppointmentScheduler = () => {
         ...appointmentData,
         userId,
       });
-      // eslint-disable-next-line no-debugger
       debugger;
       if (response.status === 200) {
         notification.success({
