@@ -17,6 +17,7 @@ const corsOptions = {
           "https://dvc-brown.vercel.app",
           "https://www.cardflare.in",
           "https://cardflare.in",
+          "https://dvc-backend.onrender.com",
         ]
       : [
           "http://localhost:3000",
