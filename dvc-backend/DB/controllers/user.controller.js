@@ -314,6 +314,25 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
+exports.getCurrentUser = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized: No user ID found" });
+    }
+
+    const user = await Users.findById(userId).select("-password -__v");
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error("Error getting current user:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 // Fix your userController.js file - Adjust the login function for troubleshooting
 
 exports.loginUser = async (req, res) => {

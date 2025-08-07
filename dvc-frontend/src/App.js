@@ -1,4 +1,6 @@
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import "antd/dist/reset.css"; // ✅ New for AntD v5+
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./animations.css";
@@ -28,6 +30,7 @@ import ResetPassword from "./components/resetpassword";
 import ScrollToTop from "./components/scrollToTop";
 
 import { useEffect } from "react";
+import AppointmentScheduler from "./components/appointmentSchedular";
 import TermsOfService from "./components/termsconditions";
 import PageTracker from "./GoogleAnalytics/pageTracker";
 function App() {
@@ -60,6 +63,10 @@ function App() {
                 <Route path="/my-cards" element={<MyCards />} />
                 <Route path="/analytics/:id" element={<CardAnalytics />} />
                 <Route path="/analytics" element={<CardAnalyticsDashboard />} />
+                <Route
+                  path="/manage-appointments"
+                  element={<AppointmentScheduler />}
+                />
               </Route>
 
               {/* Routes accessible to everyone */}

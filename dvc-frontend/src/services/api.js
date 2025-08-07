@@ -8,11 +8,14 @@ const API_URL =
     : "http://localhost:5000";
 console.log("api url ", API_URL);
 
+const token = localStorage.getItem("token");
+
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },
+  Authorization: `Bearer ${token}`,
   timeout: 10000, // 10 seconds timeout
 });
 
@@ -486,6 +489,44 @@ export const analyticsAPI = {
       console.error("Error fetching recent activity:", error);
       throw error;
     }
+  },
+};
+
+export const appointmentAPI = {
+  // Get all appointments for the logged-in user
+  getUserAppointments: async () => {
+    const response = await api.get("/api/appointments");
+    return response.data;
+  },
+
+  // Create a new appointment
+  createAppointmentScheduler: async (appointmentData) => {
+    const response = await api.post(
+      "/api/appointments/scheduler",
+      appointmentData
+    );
+    return response.data;
+  },
+
+  // Create a new appointment
+  createAppointment: async (appointmentData) => {
+    const response = await api.post("/api/appointments", appointmentData);
+    return response.data;
+  },
+
+  // Update an existing appointment
+  updateAppointment: async (appointmentId, appointmentData) => {
+    const response = await api.put(
+      `/api/appointments/${appointmentId}`,
+      appointmentData
+    );
+    return response.data;
+  },
+
+  // Delete an appointment
+  deleteAppointment: async (appointmentId) => {
+    const response = await api.delete(`/api/appointments/${appointmentId}`);
+    return response.data;
   },
 };
 

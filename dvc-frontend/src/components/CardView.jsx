@@ -13,7 +13,7 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { analyticsAPI, cardAPI } from "../services/api";
 import { themes } from "../utils/utilities";
 import BusinessHours from "./products/businessHours";
@@ -23,6 +23,7 @@ import Testimonials from "./products/testimonial";
 import QRCodeGenerator from "./qrcodegenerator";
 
 const CardView = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [card, setCard] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -529,6 +530,13 @@ END:VCARD`;
               )}
             </Card.Body>
           </Card>
+
+          <Button
+            variant="primary"
+            onClick={() => navigate("/manage-appointments")}
+          >
+            Manage Appointments
+          </Button>
 
           {/* Product Gallery Section */}
           <ProductGallery
