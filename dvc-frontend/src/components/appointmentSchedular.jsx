@@ -145,7 +145,6 @@ const AppointmentScheduler = () => {
 
     const userId = await userAPI.getCurrentUser().then((user) => user._id);
     // eslint-disable-next-line no-debugger
-    debugger;
     try {
       const response = await appointmentAPI.createAppointmentScheduler({
         ...appointmentData,
