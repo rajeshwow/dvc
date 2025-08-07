@@ -1,4 +1,4 @@
-import { notification } from "antd";
+import { message, notification } from "antd";
 import { useEffect, useState } from "react";
 
 import {
@@ -11,8 +11,6 @@ import {
   Form,
   Row,
   Table,
-  Toast,
-  ToastContainer,
 } from "react-bootstrap";
 import { appointmentAPI, userAPI } from "../services/api";
 
@@ -57,13 +55,6 @@ const AppointmentScheduler = () => {
   const [appointments, setAppointments] = useState([]);
   const [dayFilter, setDayFilter] = useState("");
   const [allChecked, setAllChecked] = useState(false);
-
-  const [alert, setAlert] = useState({ show: false, type: "", message: "" });
-  const [toast, setToast] = useState({
-    show: false,
-    message: "",
-    bg: "success",
-  });
 
   useEffect(() => {
     const defaultRange = { from: "10:00", to: "18:00" };
@@ -150,11 +141,14 @@ const AppointmentScheduler = () => {
         ...appointmentData,
         userId,
       });
+      // eslint-disable-next-line no-debugger
+      debugger;
       if (response.status === 200) {
         notification.success({
           message: "Success",
           description: "API call completed successfully!",
         });
+        message.success("Appointment settings saved successfully!");
       }
     } catch (error) {
       console.error("Failed to save appointment settings:", error);
@@ -165,17 +159,6 @@ const AppointmentScheduler = () => {
   return (
     <Container className="py-4">
       <h3 className="mb-4  fw-bold">My Appointment Slots</h3>
-      <ToastContainer position="top-end" className="p-3">
-        <Toast
-          onClose={() => setToast({ ...toast, show: false })}
-          show={toast.show}
-          delay={3000}
-          autohide
-          bg={toast.bg}
-        >
-          <Toast.Body className="text-white">{toast.message}</Toast.Body>
-        </Toast>
-      </ToastContainer>
 
       <div className="mb-3">
         <Form.Check

@@ -1,4 +1,6 @@
 {
+  "eslint.enable": true, // Add this line
+
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.removeUnusedImports": "explicit",
