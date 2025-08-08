@@ -30,6 +30,7 @@ import ScrollToTop from "./components/scrollToTop";
 
 import { useEffect } from "react";
 import AppointmentScheduler from "./components/appointmentSchedular";
+import BookAppointment from "./components/bookappointment";
 import TermsOfService from "./components/termsconditions";
 import PageTracker from "./GoogleAnalytics/pageTracker";
 function App() {
@@ -72,6 +73,10 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
               <Route path="/view/:id" element={<CardView />} />
+              <Route
+                path="/book-appointment/:ownerId"
+                element={<BookAppointment />}
+              />
               <Route
                 path="/terms-and-conditions"
                 element={<TermsOfService />}

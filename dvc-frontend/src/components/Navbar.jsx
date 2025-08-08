@@ -84,6 +84,13 @@ const Navbars = () => {
             </Nav.Link>
             <Nav.Link
               as={NavLink}
+              to="/manage-appointments"
+              onClick={() => setExpanded(false)}
+            >
+              Appointments
+            </Nav.Link>
+            <Nav.Link
+              as={NavLink}
               to="/about"
               onClick={() => setExpanded(false)}
             >

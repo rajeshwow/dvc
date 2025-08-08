@@ -1,5 +1,5 @@
 // src/components/MyCards.js
-import { Modal, notification } from "antd";
+import { Modal, notification, Space } from "antd";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -10,7 +10,8 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../Auth/AuthContext";
 import { analyticsAPI, cardAPI } from "../services/api";
 const { confirm } = Modal;
 
@@ -18,6 +19,8 @@ const MyCards = () => {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const { login, isLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch user's cards when component mounts
@@ -111,10 +114,22 @@ const MyCards = () => {
     <Container className="py-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1>My Cards</h1>
-        <Button as={Link} to="/create" variant="primary">
-          <i className="bi bi-plus-lg me-2"></i>
-          Create Card
-        </Button>
+        <div>
+          <Space>
+            <Button as={Link} to="/create" variant="primary">
+              <i className="bi bi-plus-lg me-2"></i>
+              Create Card
+            </Button>
+            {isLoggedIn && (
+              <Button
+                variant="primary"
+                onClick={() => navigate("/manage-appointments")}
+              >
+                Manage Appointments
+              </Button>
+            )}
+          </Space>
+        </div>
       </div>
 
       {cards.length === 0 ? (

@@ -513,6 +513,11 @@ export const appointmentAPI = {
     );
     return response.data;
   },
+  // Get appointment scheduler for a specific owner
+  getAppointmentScheduler: async (userId) => {
+    const response = await api.get(`/api/appointments/scheduler/${userId}`);
+    return response.data;
+  },
 
   // Create a new appointment
   createAppointment: async (appointmentData) => {
@@ -532,6 +537,16 @@ export const appointmentAPI = {
   // Delete an appointment
   deleteAppointment: async (appointmentId) => {
     const response = await api.delete(`/api/appointments/${appointmentId}`);
+    return response.data;
+  },
+  getAppointmentOfUser: async (userId) => {
+    const response = await api.get(`/api/appointments/user/${userId}`);
+    return response.data;
+  },
+  approveAppointment: async (appointmentId) => {
+    const response = await api.put(
+      `/api/appointments/${appointmentId}/approve`
+    );
     return response.data;
   },
 };

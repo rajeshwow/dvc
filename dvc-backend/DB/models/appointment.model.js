@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 
 const appointmentSchema = new mongoose.Schema(
   {
-    cardId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Card",
-      required: true,
-      index: true,
-    },
+    // cardId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Card",
+    //   required: true,
+    //   index: true,
+    // },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -16,9 +16,7 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    visitorEmail: {
-      type: String,
-    },
+
     visitorPhone: {
       type: String,
     },

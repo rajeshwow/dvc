@@ -15,6 +15,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../Auth/AuthContext";
 import { analyticsAPI, cardAPI } from "../services/api";
 import { themes } from "../utils/utilities";
 import BusinessHours from "./products/businessHours";
@@ -25,6 +26,7 @@ import QRCodeGenerator from "./qrcodegenerator";
 
 const CardView = () => {
   const navigate = useNavigate();
+  const { login, isLoggedIn } = useAuth();
   const { id } = useParams();
   const [card, setCard] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -536,12 +538,14 @@ END:VCARD`;
             </Card.Body>
           </Card>
 
-          <Button
-            variant="primary"
-            onClick={() => navigate("/manage-appointments")}
-          >
-            Manage Appointments
-          </Button>
+          {!isOwner && (
+            <Button
+              variant="primary"
+              onClick={() => navigate(`/book-appointment/${card.userId}`)}
+            >
+              Book Appointment
+            </Button>
+          )}
 
           {/* Product Gallery Section */}
           <ProductGallery
