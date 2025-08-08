@@ -1,4 +1,4 @@
-import { message, notification } from "antd";
+import { notification } from "antd";
 import { useEffect, useState } from "react";
 
 import {
@@ -141,13 +141,11 @@ const AppointmentScheduler = () => {
         ...appointmentData,
         userId,
       });
-      debugger;
       if (response.status === 200) {
         notification.success({
           message: "Success",
-          description: "API call completed successfully!",
+          description: response.message || "Settings saved successfully.",
         });
-        message.success("Appointment settings saved successfully!");
       }
     } catch (error) {
       console.error("Failed to save appointment settings:", error);

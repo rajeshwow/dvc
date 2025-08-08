@@ -1,4 +1,5 @@
 // src/components/MyCards.js
+import { Modal, notification } from "antd";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -11,6 +12,7 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { analyticsAPI, cardAPI } from "../services/api";
+const { confirm } = Modal;
 
 const MyCards = () => {
   const [cards, setCards] = useState([]);
@@ -55,19 +57,37 @@ const MyCards = () => {
     }
   };
 
-  console.log("gggggggggggggggggggggggggg", cards);
+  const handleDeleteCard = (cardId) => {
+    confirm({
+      title: "Are you sure you want to delete this card?",
+      content: "This action cannot be undone.",
+      okText: "Yes, Delete",
+      okType: "danger",
+      cancelText: "Cancel",
+      onOk: async () => {
+        try {
+          await cardAPI.deleteCard(cardId);
+          // Remove the deleted card from state
+          setCards((prevCards) =>
+            prevCards.filter((card) => card._id !== cardId)
+          );
 
-  const handleDeleteCard = async (cardId) => {
-    if (window.confirm("Are you sure you want to delete this card?")) {
-      try {
-        await cardAPI.deleteCard(cardId);
-        // Remove the deleted card from state
-        setCards(cards.filter((card) => card._id !== cardId));
-      } catch (err) {
-        console.error("Error deleting card:", err);
-        alert("Failed to delete card. Please try again.");
-      }
-    }
+          notification.success({
+            message: "Card Deleted",
+            description: "Your card has been deleted successfully.",
+          });
+        } catch (err) {
+          console.error("Error deleting card:", err);
+          notification.error({
+            message: "Error",
+            description: "Failed to delete card. Please try again.",
+          });
+        }
+      },
+      onCancel() {
+        console.log("Delete cancelled");
+      },
+    });
   };
 
   if (loading) {

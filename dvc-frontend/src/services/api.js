@@ -1,4 +1,5 @@
 // frontend/src/services/api.js
+import { notification } from "antd";
 import axios from "axios";
 
 // Create a base instance of axios with default configuration
@@ -55,10 +56,15 @@ api.interceptors.response.use(
       localStorage.removeItem("user");
 
       // Display an alert to inform the user (optional)
-      alert("Your session has expired. Please log in again.");
+      notification.error({
+        message: "Session Expired",
+        description: "Your session has expired. Please log in again.",
+      });
 
       // navigate("/login");
-      window.location.href = "/login";
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000);
     }
 
     return Promise.reject(error);

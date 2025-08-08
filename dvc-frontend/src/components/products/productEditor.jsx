@@ -209,7 +209,6 @@ const ProductEditor = ({ show, onHide, product, onSave }) => {
       setExistingImageRemoved(false);
     } catch (error) {
       console.error("Error in ProductEditor:", error);
-      alert("Error saving product. Please check the console for details.");
     } finally {
       setLoading(false);
     }

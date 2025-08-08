@@ -1,6 +1,6 @@
+import { notification } from "antd";
 import { useState } from "react";
 import {
-  Alert,
   Button,
   Card,
   Col,
@@ -121,7 +121,6 @@ const CardCreate = () => {
   // UI state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState("personal");
 
   // Font options
@@ -239,11 +238,17 @@ const CardCreate = () => {
       };
 
       const response = await cardAPI.createCard(cardWithUserId);
-
-      setSuccess(true);
-      setTimeout(() => {
-        navigate(`/view/${response?._id}`);
-      }, 1500);
+      if (response.status !== 201) {
+        setError(response.data?.error || "Failed to create card.");
+      } else {
+        notification.success({
+          message: "Card created successfully",
+          description: "Your digital card has been created.",
+        });
+        setTimeout(() => {
+          navigate(`/view/${response?.card._id}`);
+        }, 1500);
+      }
     } catch (err) {
       console.error("Error saving card:", err);
       setError(
@@ -411,23 +416,6 @@ const CardCreate = () => {
 
   return (
     <Container className="py-4">
-      <Row>
-        <Col lg={12} className="mb-4">
-          {/* <h2 className="fw-bold">Create Your Digital Card</h2>
-          <p className="text-muted">
-            Fill in your information and customize your card's appearance.
-          </p> */}
-
-          {error && <Alert variant="danger">{error}</Alert>}
-
-          {success && (
-            <Alert variant="success">
-              Card saved successfully! Redirecting to view your card...
-            </Alert>
-          )}
-        </Col>
-      </Row>
-
       <Row>
         {/* Form Section */}
         <Col lg={8}>

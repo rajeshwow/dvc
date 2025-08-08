@@ -1,3 +1,4 @@
+import { notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import brandLogo from "../assets/images/cardflare_logo.svg"; // Adjust path as needed
 import "../footer.css";
@@ -142,7 +143,10 @@ const ElegantFooter = () => {
                       className="newsletter-btn"
                       onClick={(e) => {
                         e.preventDefault();
-                        alert("Thank you for subscribing! 🎉");
+                        notification.success({
+                          message: "Subscription Successful",
+                          description: "Thank you for subscribing! 🎉",
+                        });
                       }}
                     >
                       Subscribe

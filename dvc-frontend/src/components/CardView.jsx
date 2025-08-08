@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState } from "react";
 
+import { notification } from "antd";
 import {
   Alert,
   Button,
@@ -59,6 +60,10 @@ const CardView = () => {
       // Close modal and reset state
       setShowDeleteModal(false);
       setProductToDelete(null);
+      notification.success({
+        message: "Product Deleted",
+        description: "The product has been deleted successfully.",
+      });
 
       console.log("Product deleted successfully");
     } catch (error) {

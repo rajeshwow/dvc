@@ -28,7 +28,12 @@ exports.createCard = async (req, res) => {
     // Save to database
     const savedCard = await newCard.save();
 
-    res.status(201).json(savedCard);
+    res.status(201).json({
+      message: "Card created successfully",
+      card: savedCard,
+      success: true,
+      status: 201,
+    });
   } catch (error) {
     console.error("Error creating card:", error);
     res.status(400).json({ error: error.message });

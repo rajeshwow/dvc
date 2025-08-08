@@ -1,6 +1,5 @@
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import "antd/dist/reset.css"; // ✅ New for AntD v5+
-
+import "antd/dist/antd.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./animations.css";

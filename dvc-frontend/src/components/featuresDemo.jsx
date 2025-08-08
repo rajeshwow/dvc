@@ -1,3 +1,4 @@
+import { notification } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../featuresdemo.css";
@@ -31,7 +32,10 @@ const FeaturesDemo = () => {
   }, []);
 
   const startCreating = () => {
-    alert("Redirecting to card creator... 🚀");
+    notification.success({
+      message: "Redirecting",
+      description: "You will be redirected to the card creator shortly.",
+    });
   };
 
   const features = [
